@@ -21,6 +21,7 @@ class MqttSetup extends StateNotifier<MqttConnectionState> {
   void setups() {
     client.connectionMessage = connMess;
     client.onDisconnected = onDisconnect;
+    client.onConnected = onConnect;
     client.autoReconnect = true;
     client.onAutoReconnect = onReconnecting;
     client.onAutoReconnected = onReconnected;
@@ -47,7 +48,11 @@ class MqttSetup extends StateNotifier<MqttConnectionState> {
   // callback for when disconnected
   // this does not set state - that is done in disconnect()
   void onDisconnect() {
-    print("OOPs we've been disconnected");
+    print("onDisconnected callback");
+  }
+
+  void onConnect() {
+    print("onConnect callback");
   }
 
   // callback for when trying to reconnect
