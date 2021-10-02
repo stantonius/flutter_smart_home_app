@@ -34,7 +34,7 @@ jobs:
 
       - uses: maierj/fastlane-action@v2.0.1
         with:
-          lane: "beta"
+          lane: "distribute"
           subdirectory: "android"
 
       - name: distribute to firebase
