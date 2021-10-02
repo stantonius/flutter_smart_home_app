@@ -27,14 +27,10 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.0.2"
-
-      - name: Install bundle
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          ruby-version: 3.0.2
+          bundler-cache: true
 
       - name: setup fastlane
         run: bundle install
