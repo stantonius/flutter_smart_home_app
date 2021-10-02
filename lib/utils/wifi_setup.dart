@@ -5,12 +5,14 @@ import 'package:network_info_plus/network_info_plus.dart';
 
 final networkInfo = NetworkInfo();
 
-final controller = StreamController<String>();
+// Future<String> wifiName() async {
+//   return await networkInfo.getWifiName() ?? "None";
+// }
 
 final networkStreamProvider = StreamProvider((ref) {
   Stream wifiStream = Stream.periodic(Duration(seconds: 2), (_) {
     return networkInfo.getWifiName();
   });
 
-  return wifiStream;
+  return wifiStream.asyncMap((event) async => await event);
 });

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_app/models/mqtt_setup.dart';
+import 'package:stantonsmarthome/models/mqtt_setup.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 final String brokerIPaddress = "10.0.0.54";

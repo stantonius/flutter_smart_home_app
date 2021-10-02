@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:home_app/components/clickable_card.dart';
-import 'package:home_app/components/switch.dart';
-import 'package:home_app/theme/custom_theme.dart';
-import 'package:home_app/utils/ble_beacon.dart';
-import 'package:home_app/utils/mqtt_connect.dart';
-import 'package:home_app/utils/wifi_setup.dart';
+import 'package:stantonsmarthome/components/clickable_card.dart';
+import 'package:stantonsmarthome/components/switch.dart';
+import 'package:stantonsmarthome/theme/custom_theme.dart';
+import 'package:stantonsmarthome/utils/ble_beacon.dart';
+import 'package:stantonsmarthome/utils/mqtt_connect.dart';
+import 'package:stantonsmarthome/utils/wifi_setup.dart';
 import 'package:mqtt_client/mqtt_client.dart';
+import 'package:network_info_plus/network_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 final blestate = BLESetup();
+
+final networkInfo = NetworkInfo();
+
+void deets() async {
+  // networkInfo.getWifiName().then((value) => print("THIS IS VALUE $value"));
+  // print(await Permission.location.isGranted);
+  await Permission.location.request().isGranted;
+}
 
 // icons for service states
 FaIcon mqttConnIcon(MqttConnectionState mqttConnectionState) {
@@ -68,6 +78,7 @@ class MyHomePage extends ConsumerStatefulWidget {
 class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   void initState() {
+    deets();
     ref.read(clientStateProvider.notifier).connect();
     super.initState();
   }
@@ -91,11 +102,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   children: [
                     Expanded(
                         child: Center(
-                      child: wifiAsyncValue.map(
-                          data: (data) => Text("Current Wifi Network is $data"),
-                          loading: () => CircularProgressIndicator(),
-                          error: (e, st) => Text('Error: $e')),
-                    ))
+                            child: wifiAsyncValue.when(
+                                data: (data) {
+                                  return Text("$data");
+                                },
+                                loading: () => CircularProgressIndicator(),
+                                error: (e, st) => Text("$st"))))
                   ],
                 ),
                 Row(
