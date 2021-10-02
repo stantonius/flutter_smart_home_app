@@ -46,6 +46,7 @@ jobs:
       #   with:
       #     lane: "distribute"
       #     subdirectory: "android"
+      # work please
 
       - name: distribute to firebase
         working-directory: ./android
