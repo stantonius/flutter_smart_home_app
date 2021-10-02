@@ -32,8 +32,10 @@ jobs:
           ruby-version: 3.0.2
           bundler-cache: true
 
-      - name: setup fastlane
-        run: bundle install smart_home_app/android
+      - uses: maierj/fastlane-action@v2.0.1
+        with:
+          lane: "beta"
+          subdirectory: "android"
 
       - name: distribute to firebase
         run: bundle exec fastlane android distribute
