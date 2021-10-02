@@ -39,7 +39,8 @@ platform :android do
   desc "Distribute app"
   lane :distribute do
     build_android_app(
-      task: "bundle"
+      task: "assemble",
+      build_type: "Release"
     ) # builtin fastlane action
     firebase_app_distribution(
       app: "1:466933397959:android:b68b179ebf3c0f7ea041e2",
