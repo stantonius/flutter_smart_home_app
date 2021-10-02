@@ -43,7 +43,9 @@ platform :android do
       build_type: "Release"
     ) # builtin fastlane action
     firebase_app_distribution(
-      app: "1:466933397959:android:b68b179ebf3c0f7ea041e2",
+      # app: "1:466933397959:android:b68b179ebf3c0f7ea041e2",
+      app: ENV["FIREBASE_APP_ID"],
+      firebase_cli_token: ENV["FIREBASE_APP_TOKEN"],
       testers: "craig", # group created in Firebase Add Distribution
       release_notes: "First trial of an actual app release",
       # debug: true,
