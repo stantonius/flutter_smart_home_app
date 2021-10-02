@@ -33,7 +33,7 @@ jobs:
           bundler-cache: true
 
       - name: setup fastlane
-        run: bundle install
+        run: bundle install smart_home_app/android
 
       - name: distribute to firebase
         run: bundle exec fastlane android distribute
