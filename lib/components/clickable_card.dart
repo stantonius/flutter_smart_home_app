@@ -7,7 +7,7 @@ class ClickableCard extends StatefulWidget {
   const ClickableCard(
       {required this.clickFunction,
       required this.cardText,
-      required this.icon,
+      this.icon,
       Key? key})
       : super(key: key);
 

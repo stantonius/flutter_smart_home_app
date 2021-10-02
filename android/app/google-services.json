@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "466933397959",
+    "project_id": "stantonsmarthome",
+    "storage_bucket": "stantonsmarthome.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:466933397959:android:b68b179ebf3c0f7ea041e2",
+        "android_client_info": {
+          "package_name": "com.example.stantonsmarthome"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "466933397959-ke35m16icjkp15c8puov5cv1f1neuim9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6v2EhFtbYH133z4yLX_dh56jQl3lsYjk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "466933397959-ke35m16icjkp15c8puov5cv1f1neuim9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
