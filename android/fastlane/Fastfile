@@ -39,7 +39,7 @@ platform :android do
   desc "Distribute app"
   lane :distribute do
     build_android_app(
-      task: "assemble",
+      task: "clean assemble",
       build_type: "Release"
     ) # builtin fastlane action
     firebase_app_distribution(
