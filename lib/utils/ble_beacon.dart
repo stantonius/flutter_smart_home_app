@@ -9,6 +9,10 @@ BeaconBroadcast broadcastSettings = BeaconBroadcast(
 class BLESetup {
   final beacon = flutterBeacon;
 
+  Future<BluetoothState> btState() {
+    return beacon.bluetoothState;
+  }
+
   void broadcastOnOff() async {
     beacon.bluetoothState.then((value) => print(value));
     if (await beacon.isBroadcasting()) {

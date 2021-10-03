@@ -15,11 +15,15 @@ final blestate = BLESetup();
 
 final networkInfo = NetworkInfo();
 
-void deets() async {
-  // networkInfo.getWifiName().then((value) => print("THIS IS VALUE $value"));
-  // print(await Permission.location.isGranted);
+void devicePermissions() async {
+  // await Permission.bluetooth.
   await Permission.location.request().isGranted;
 }
+
+final btStreamProvider = StreamProvider((ref) {
+  Stream btStateStream = Stream.fromFuture(blestate.btState());
+  return btStateStream;
+});
 
 // icons for service states
 FaIcon mqttConnIcon(MqttConnectionState mqttConnectionState) {
@@ -78,7 +82,7 @@ class MyHomePage extends ConsumerStatefulWidget {
 class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   void initState() {
-    deets();
+    devicePermissions();
     ref.read(clientStateProvider.notifier).connect();
     super.initState();
   }
@@ -87,6 +91,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   Widget build(BuildContext context) {
     final clientState = ref.watch(clientStateProvider);
     final wifiAsyncValue = ref.watch(networkStreamProvider);
+    final btStateAsyncValue = ref.watch(btStreamProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -104,10 +109,23 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                         child: Center(
                             child: wifiAsyncValue.when(
                                 data: (data) {
-                                  return Text("$data");
+                                  return Text("Current Wifi Network: $data");
                                 },
                                 loading: () => CircularProgressIndicator(),
                                 error: (e, st) => Text("$st"))))
+                  ],
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                        child: Center(
+                      child: btStateAsyncValue.when(
+                          data: (data) {
+                            return Text("Device Bluetooth State: $data");
+                          },
+                          loading: () => CircularProgressIndicator(),
+                          error: (e, st) => Text("$st")),
+                    ))
                   ],
                 ),
                 Row(
