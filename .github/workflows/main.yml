@@ -50,9 +50,10 @@ jobs:
 
       - name: distribute to firebase
         working-directory: ./android
-        run: |
-          fastlane add_plugin firebase_app_distribution
-          bundle exec fastlane android distribute
+        # run: |
+        #   # fastlane add_plugin firebase_app_distribution
+        #   bundle exec fastlane android distribute
+        run: bundle exec fastlane android distribute
         env:
           FIREBASE_APP_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
