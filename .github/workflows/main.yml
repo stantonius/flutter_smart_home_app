@@ -26,7 +26,7 @@ jobs:
         os: [ubuntu-latest]                               
         include:                                 
           - os: ubuntu-latest                                   
-          flutter_path: /opt/hostedtoolcache/flutter
+            flutter_path: /opt/hostedtoolcache/flutter
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
