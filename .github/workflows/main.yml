@@ -51,8 +51,8 @@ jobs:
       - name: distribute to firebase
         working-directory: ./android
         run: |
-          fastlane add_plugin firebase_app_distribution
-          fastlane update_plugins
+          bundle exec fastlane add_plugin firebase_app_distribution
+          bundle exec fastlane update_plugins
           bundle exec fastlane android distribute
         # run: bundle exec fastlane android distribute
         env:
