@@ -41,10 +41,10 @@ platform :android do
     build_android_app(
       task: "assemble",
       build_type: "Release",
-      properties: {
-        "android.injected.version.code" => 101,
-        "android.injected.version.name" => "1.0.1",
-      }
+      # properties: {
+      #   "android.injected.version.code" => 101,
+      #   "android.injected.version.name" => "1.0.1",
+      # }
     ) # builtin fastlane action
     firebase_app_distribution(
       app: ENV["FIREBASE_APP_ID"],
