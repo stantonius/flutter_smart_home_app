@@ -64,9 +64,9 @@ jobs:
       - name: setup fastlane
         working-directory: ./android
         run: bundle install
-      - name: flutter build appbundle
+      - name: flutter build apk
         working-directory: ./android
-        run: flutter build appbundle
+        run: flutter build apk
       - name: distribute to firebase
         working-directory: ./android
         # run: |

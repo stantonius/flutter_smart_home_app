@@ -25,6 +25,8 @@ final btStreamProvider = StreamProvider((ref) {
   return btStateStream;
 });
 
+// test
+
 // icons for service states
 FaIcon mqttConnIcon(MqttConnectionState mqttConnectionState) {
   if (mqttConnectionState == MqttConnectionState.connected) {
@@ -103,6 +105,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           Container(
             child: Column(
               children: [
+                Row(
+                  children: [Expanded(child: Text("HI"))],
+                ),
                 Row(
                   children: [
                     Expanded(
