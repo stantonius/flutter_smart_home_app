@@ -38,14 +38,14 @@ platform :android do
 
   desc "Distribute app"
   lane :distribute do
-    build_android_app(
-      task: "assemble",
-      build_type: "Release",
-      # properties: {
-      #   "android.injected.version.code" => 101,
-      #   "android.injected.version.name" => "1.0.1",
-      # }
-    ) # builtin fastlane action
+    # build_android_app(
+    #   task: "clean assemble",
+    #   build_type: "Release",
+    #   # properties: {
+    #   #   "android.injected.version.code" => 101,
+    #   #   "android.injected.version.name" => "1.0.1",
+    #   # }
+    # ) # builtin fastlane action
     firebase_app_distribution(
       app: ENV["FIREBASE_APP_ID"],
       firebase_cli_token: ENV["FIREBASE_APP_TOKEN"],
@@ -57,7 +57,7 @@ platform :android do
       # android_artifact_path: "../build/app/outputs/bundle/release/app-release.aab",
       # android_artifact_type: "AAB"
       android_artifact_path: "../build/app/outputs/apk/release/app-release.apk",
-      android_artifact_type: "APK"
+      # android_artifact_type: "APK"
     )
   end
 end
