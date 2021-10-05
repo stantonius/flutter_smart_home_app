@@ -1,59 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:stantonsmarthome/components/clickable_card.dart';
 import 'package:stantonsmarthome/components/switch.dart';
 import 'package:stantonsmarthome/theme/custom_theme.dart';
 import 'package:stantonsmarthome/utils/ble_beacon.dart';
+import 'package:stantonsmarthome/utils/device_bluetooth.dart';
 import 'package:stantonsmarthome/utils/mqtt_connect.dart';
 import 'package:stantonsmarthome/utils/wifi_setup.dart';
-import 'package:mqtt_client/mqtt_client.dart';
-import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-final blestate = BLESetup();
-
-final networkInfo = NetworkInfo();
 
 void devicePermissions() async {
   // await Permission.bluetooth.
   await Permission.location.request().isGranted;
-}
-
-final btStreamProvider = StreamProvider((ref) {
-  Stream btStateStream = Stream.fromFuture(blestate.btState());
-  return btStateStream;
-});
-
-// test
-
-// icons for service states
-FaIcon mqttConnIcon(MqttConnectionState mqttConnectionState) {
-  if (mqttConnectionState == MqttConnectionState.connected) {
-    return FaIcon(
-      FontAwesomeIcons.check,
-      color: Colors.green,
-    );
-  } else {
-    return FaIcon(
-      FontAwesomeIcons.exclamationTriangle,
-      color: Colors.red,
-    );
-  }
-}
-
-FaIcon bleConnIcon(MqttConnectionState mqttConnectionState) {
-  if (mqttConnectionState == MqttConnectionState.connected) {
-    return FaIcon(
-      FontAwesomeIcons.check,
-      color: Colors.green,
-    );
-  } else {
-    return FaIcon(
-      FontAwesomeIcons.exclamationTriangle,
-      color: Colors.red,
-    );
-  }
 }
 
 void main() {
@@ -91,10 +48,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final clientState = ref.watch(clientStateProvider);
-    final wifiAsyncValue = ref.watch(networkStreamProvider);
-    final btStateAsyncValue = ref.watch(btStreamProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -106,56 +59,16 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             child: Column(
               children: [
                 Row(
-                  children: [Expanded(child: Text("HI"))],
+                  children: [Expanded(child: WifiStatus())],
                 ),
                 Row(
-                  children: [
-                    Expanded(
-                        child: Center(
-                            child: wifiAsyncValue.when(
-                                data: (data) {
-                                  return Text("Current Wifi Network: $data");
-                                },
-                                loading: () => CircularProgressIndicator(),
-                                error: (e, st) => Text("$st"))))
-                  ],
+                  children: [Expanded(child: DeviceBTStatus())],
                 ),
                 Row(
-                  children: [
-                    Expanded(
-                        child: Center(
-                      child: btStateAsyncValue.when(
-                          data: (data) {
-                            return Text("Device Bluetooth State: $data");
-                          },
-                          loading: () => CircularProgressIndicator(),
-                          error: (e, st) => Text("$st")),
-                    ))
-                  ],
+                  children: [Expanded(child: MqttCard())],
                 ),
                 Row(
-                  children: [
-                    Expanded(
-                      child: ClickableCard(
-                        clickFunction: ref.read(clientStateProvider) ==
-                                MqttConnectionState.connected
-                            ? ref.read(clientStateProvider.notifier).disconnect
-                            : ref.read(clientStateProvider.notifier).connect,
-                        cardText: clientState.toString(),
-                        icon: mqttConnIcon(ref.read(clientStateProvider)),
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        child: ClickableCard(
-                      cardText: "BLE clicker",
-                      clickFunction: blestate.broadcastOnOff,
-                      icon: FaIcon(FontAwesomeIcons.bluetooth),
-                    ))
-                  ],
+                  children: [Expanded(child: BLECard())],
                 )
               ],
             ),

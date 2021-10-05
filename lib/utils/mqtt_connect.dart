@@ -1,7 +1,9 @@
 // https://github.com/shamblett/mqtt_client/blob/master/example/mqtt_server_client.dart
 // https://codewithandrea.com/videos/flutter-state-management-riverpod/
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
@@ -73,7 +75,7 @@ class MqttSetup extends StateNotifier<MqttConnectionState> {
   }
 }
 
-final clientReconnectStateProvider = StateProvider<int>((ref) => 0);
+// final clientReconnectStateProvider = StateProvider<int>((ref) => 0);
 
 final clientStateProvider =
     StateNotifierProvider<MqttSetup, MqttConnectionState>((ref) => MqttSetup(
@@ -81,3 +83,47 @@ final clientStateProvider =
             maxConnectionAttempts: 10)));
 
 // final streamController = StreamController();
+
+// icons for service states
+FaIcon mqttConnIcon(MqttConnectionState mqttConnectionState) {
+  if (mqttConnectionState == MqttConnectionState.connected) {
+    return FaIcon(
+      FontAwesomeIcons.check,
+      color: Colors.green,
+    );
+  } else {
+    return FaIcon(
+      FontAwesomeIcons.exclamationTriangle,
+      color: Colors.red,
+    );
+  }
+}
+
+class MqttCard extends ConsumerWidget {
+  const MqttCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final clientState = ref.watch(clientStateProvider);
+    return Container(
+        child: InkWell(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("MQTT State: $clientState"),
+              mqttConnIcon(ref.read(clientStateProvider))
+            ],
+          ),
+        ),
+      ),
+      onTap: () {
+        ref.read(clientStateProvider) == MqttConnectionState.connected
+            ? ref.read(clientStateProvider.notifier).disconnect()
+            : ref.read(clientStateProvider.notifier).connect();
+      },
+    ));
+  }
+}
