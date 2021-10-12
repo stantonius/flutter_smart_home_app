@@ -43,10 +43,10 @@ jobs:
         with:
           flutter-version: "2.6"
           channel: "beta"
-      - uses: actions/cache@v1
-        with:
-          path: ${{ matrix.flutter_path }}
-          key: ${{ runner.os }}-flutter-install-cache-${{ env.flutter_version }}
+      # - uses: actions/cache@v1
+      #   with:
+      #     path: ${{ matrix.flutter_path }}
+      #     key: ${{ runner.os }}-flutter-install-cache-${{ env.flutter_version }}
       - run: flutter pub get
 
 

@@ -14,7 +14,7 @@ final _geofenceService = GeofenceService.instance.setup(
     statusChangeDelayMs: 10000,
     useActivityRecognition: true,
     allowMockLocations: false,
-    printDevLog: false,
+    printDevLog: true,
     geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
 
 // Create a [Geofence] list.
@@ -78,7 +78,7 @@ Future<void> _onGeofenceStatusChanged(
   print('geofence: $geofence');
   print('geofenceRadius: $geofenceRadius');
   print('geofenceStatus: ${geofenceStatus.toString()}');
-  _geofenceStreamController.sink.add(geofence);
+  // _geofenceStreamController.sink.add(geofence);
 }
 
 // This function is to be called when the activity has changed.
