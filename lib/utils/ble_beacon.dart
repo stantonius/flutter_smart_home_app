@@ -33,6 +33,16 @@ class BLESetup extends StateNotifier<Future<bool>> {
     }
   }
 
+  void bleOnSwitch() async {
+    final currState = await state;
+    if (currState != true) {
+      await beacon.startBroadcast(broadcastSettings);
+      state = beacon.isBroadcasting();
+    } else {
+      print("Already broadcasting");
+    }
+  }
+
   // Needed when wifi is not home network, shut off advertising
   void bleKillSwitch() async {
     print("IS THIS EVEN CALLED?");
@@ -52,6 +62,10 @@ final beaconStateProvider =
 // so we need a secondary function to read and update accordingly
 final bleFutureStateProvider =
     FutureProvider((ref) async => await ref.watch(beaconStateProvider));
+
+// final bleStreamStateProvider = StreamProvider((ref){
+//   Stream bleStreamState = Stream.fromFuture(ref.watch(bleFutureStateProvider));
+// })
 
 // Here is where we integrate the device BT state stream and
 final getDeviceBTState = Provider((ref) {
@@ -82,7 +96,7 @@ class BLECard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentBLEState = ref.watch(bleFutureStateProvider);
-    final testy = ref.watch(getDeviceBTState);
+    // final testy = ref.watch(getDeviceBTState);
 
     return Container(
       child: InkWell(

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stantonsmarthome/components/switch.dart';
 import 'package:stantonsmarthome/theme/custom_theme.dart';
+import 'package:stantonsmarthome/utils/background.dart';
 import 'package:stantonsmarthome/utils/ble_beacon.dart';
 import 'package:stantonsmarthome/utils/device_bluetooth.dart';
+import 'package:stantonsmarthome/utils/geofence.dart';
 import 'package:stantonsmarthome/utils/mqtt_connect.dart';
 import 'package:stantonsmarthome/utils/wifi_setup.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,8 +15,15 @@ void devicePermissions() async {
   await Permission.location.request().isGranted;
 }
 
+// Remi recommends against this but I have no other way
+final container = ProviderContainer();
+
+void testFunction() async {
+  // callbackDispatcher();
+}
+
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  runApp(UncontrolledProviderScope(container: container, child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -43,7 +52,17 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   void initState() {
     devicePermissions();
     ref.read(clientStateProvider.notifier).connect();
+    ref.read(beaconStateProvider.notifier).bleOnSwitch();
+    // workManager.initialize(
+    //     callbackDispatcher, // The top level function, aka callbackDispatcher
+    //     isInDebugMode:
+    //         true // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
+    //     );
+    // registerWorkmanagerTasks();
+
+    // Future.delayed(Duration(seconds: 20), testFunction);
     super.initState();
+    geofenceCallbacks();
   }
 
   @override
@@ -63,6 +82,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 ),
                 Row(
                   children: [Expanded(child: DeviceBTStatus())],
+                ),
+                Row(
+                  children: [Expanded(child: GeofenceDetails())],
                 ),
                 Row(
                   children: [Expanded(child: MqttCard())],

@@ -18,7 +18,7 @@ class BTDeviceState extends StateNotifier<Future<BluetoothState>> {
       : super(beacon.bluetoothState);
 
   Stream<BluetoothState> btDeviceStateChanged() {
-    ref.read(beaconStateProvider.notifier).bleKillSwitch();
+    // ref.read(beaconStateProvider.notifier).bleKillSwitch();
     return beacon.bluetoothStateChanged();
   }
 }

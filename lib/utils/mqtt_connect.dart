@@ -1,6 +1,8 @@
 // https://github.com/shamblett/mqtt_client/blob/master/example/mqtt_server_client.dart
 // https://codewithandrea.com/videos/flutter-state-management-riverpod/
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,6 +41,10 @@ class MqttSetup extends StateNotifier<MqttConnectionState> {
       print('MQTT client connection exception - $e');
       client.disconnect();
       state = MqttConnectionState.faulted;
+    } on SocketException catch (e) {
+      print('MQTT client connection exception - $e');
+      client.disconnect();
+      state = MqttConnectionState.disconnected;
     }
   }
 
