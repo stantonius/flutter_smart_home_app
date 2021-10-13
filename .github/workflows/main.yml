@@ -15,17 +15,16 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  
   distribute:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # runs-on: ${{ matrix.os }}                           
-    # strategy:                             
-    #   matrix:                               
-    #     os: [ubuntu-latest]                               
-    #     include:                                 
-    #       - os: ubuntu-latest                                   
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+    #   matrix:
+    #     os: [ubuntu-latest]
+    #     include:
+    #       - os: ubuntu-latest
     #         flutter_path: /opt/hostedtoolcache/flutter
 
     steps:
@@ -36,9 +35,9 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
-      # - uses: actions/setup-java@v1
-      #   with:
-      #     java-version: "12.x"
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: "2.5.x"
@@ -48,7 +47,6 @@ jobs:
       #     path: ${{ matrix.flutter_path }}
       #     key: ${{ runner.os }}-flutter-install-cache-${{ env.flutter_version }}
       - run: flutter pub get
-
 
       - uses: ruby/setup-ruby@v1
         with:
