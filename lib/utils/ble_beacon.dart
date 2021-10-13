@@ -76,7 +76,7 @@ final getDeviceBTState = Provider((ref) {
 
 // Dynamic icons that change colour depending on state
 FaIcon bleConnIcon(AsyncValue bleState) {
-  if (bleState.data?.value == true) {
+  if (bleState.asData?.value == true) {
     return FaIcon(
       FontAwesomeIcons.bluetooth,
       color: Colors.green,
@@ -108,8 +108,8 @@ class BLECard extends ConsumerWidget {
               children: [
                 currentBLEState.when(
                     data: (data) => Text("Broadcasting State $data"),
-                    loading: () => Text("Broadcasting State Loading"),
-                    error: (e, st) => Text("Error: $e")),
+                    loading: (asyncVal) => Text("Broadcasting State Loading"),
+                    error: (e, st, asyncVal) => Text("Error: $e")),
                 bleConnIcon(currentBLEState.whenData((value) => value))
               ],
             ),

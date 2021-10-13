@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stantonsmarthome/utils/ble_beacon.dart';
 
 /// Initially I tried to a) get the device Bluetooth state and b) start/stop broadcasting
 /// but it became to complicated. So now breaking it up into 2 separate providers.
@@ -43,8 +42,8 @@ class DeviceBTStatus extends ConsumerWidget {
             data: (data) {
               return Text("Device Bluetooth State: $data");
             },
-            loading: () => CircularProgressIndicator(),
-            error: (e, st) => Text("$st")),
+            loading: (asyncVal) => CircularProgressIndicator(),
+            error: (e, st, asyncVal) => Text("$st")),
       ),
     );
   }
