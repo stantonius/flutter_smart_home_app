@@ -33,7 +33,7 @@ dependencies:
   network_info_plus: ^1.1.0
   flutter_beacon: ^0.5.1
   font_awesome_flutter: ^9.1.0
-  permission_handler: ^8.1.6
+  permission_handler: ^8.2.2
   web_socket_channel: ^2.1.0
   firebase_core: ^0.4.0+9
   firebase_analytics: ^5.0.2
