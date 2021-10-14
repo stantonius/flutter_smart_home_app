@@ -78,7 +78,7 @@ Future<void> _onGeofenceStatusChanged(
   print('geofence: $geofence');
   print('geofenceRadius: $geofenceRadius');
   print('geofenceStatus: ${geofenceStatus.toString()}');
-  // _geofenceStreamController.sink.add(geofence);
+  _geofenceStreamController.sink.add(geofence);
 }
 
 // This function is to be called when the activity has changed.
@@ -86,7 +86,7 @@ void _onActivityChanged(Activity prevActivity, Activity currActivity) {
   print('prevActivity: ${prevActivity.toJson()}');
   print('currActivity: ${currActivity.toJson()}');
   _activityStreamController.sink.add(currActivity.toJson());
-  container.read(beaconStateProvider.notifier).broadcastOnOff();
+  // container.read(beaconStateProvider.notifier).broadcastOnOff();
 }
 
 // This function is to be called when the location has changed.
