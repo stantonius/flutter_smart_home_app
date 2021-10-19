@@ -18,6 +18,6 @@ Very much in progress. It does work though as an iBeacon.
 
 ## ToDo
 - [ ] Turn off beacon when leaving geofence
-- [ ] Enable light switch to
+- [ ] Enable light switch to turn on/off lights via Node-Red/MQTT
 - [ ] Properly disable all features if not at home
 - [ ] Enable remote access
