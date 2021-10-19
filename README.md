@@ -17,7 +17,7 @@ Very much in progress. It does work though as an iBeacon.
 * Currently only for Android (although every library purposely chosen with iPhone compatability in mind).
 
 ## ToDo
-- [] Turn off beacon when leaving geofence
-- [] Enable light switch to
-- [] Properly disable all features if not at home
-- [] Enable remote access
+- [ ] Turn off beacon when leaving geofence
+- [ ] Enable light switch to
+- [ ] Properly disable all features if not at home
+- [ ] Enable remote access
