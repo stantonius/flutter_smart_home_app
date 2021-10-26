@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stantonsmarthome/components/switch.dart';
 import 'package:stantonsmarthome/theme/custom_theme.dart';
-import 'package:stantonsmarthome/utils/background.dart';
 import 'package:stantonsmarthome/utils/ble_beacon.dart';
 import 'package:stantonsmarthome/utils/device_bluetooth.dart';
 import 'package:stantonsmarthome/utils/geofence.dart';
@@ -51,8 +50,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   void initState() {
     devicePermissions();
-    ref.read(clientStateProvider.notifier).connect();
-    ref.read(beaconStateProvider.notifier).bleOnSwitch();
+    geofenceCallbacks();
+    // ref.read(clientStateProvider.notifier).connect();
+    // ref.read(beaconStateProvider.notifier).bleOnSwitch();
     // workManager.initialize(
     //     callbackDispatcher, // The top level function, aka callbackDispatcher
     //     isInDebugMode:
@@ -62,7 +62,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
     // Future.delayed(Duration(seconds: 20), testFunction);
     super.initState();
-    geofenceCallbacks();
   }
 
   @override
@@ -85,6 +84,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 ),
                 Row(
                   children: [Expanded(child: GeofenceDetails())],
+                ),
+                Row(
+                  children: [Expanded(child: ActivityDetails())],
                 ),
                 Row(
                   children: [Expanded(child: MqttCard())],

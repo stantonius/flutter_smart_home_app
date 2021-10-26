@@ -4,12 +4,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geofence_service/geofence_service.dart';
-import 'package:stantonsmarthome/main.dart';
-import 'package:stantonsmarthome/utils/ble_beacon.dart';
 
 final _geofenceService = GeofenceService.instance.setup(
     interval: 5000,
-    accuracy: 100,
+    accuracy: 50,
     loiteringDelayMs: 60000,
     statusChangeDelayMs: 10000,
     useActivityRecognition: true,
@@ -21,8 +19,8 @@ final _geofenceService = GeofenceService.instance.setup(
 final _geofenceList = <Geofence>[
   Geofence(
     id: 'Home',
-    latitude: 45.4101387,
-    longitude: -75.6961248,
+    latitude: 45.410132,
+    longitude: -75.693938,
     radius: [
       // GeofenceRadius(id: 'radius_100m', length: 100),
       GeofenceRadius(id: 'radius_25m', length: 25),
@@ -33,8 +31,8 @@ final _geofenceList = <Geofence>[
 /// State setup
 // 1. Geofence and activity streams
 // These simply house the data provided in the "onChange" functions below
-StreamController<Geofence> _geofenceStreamController =
-    StreamController<Geofence>();
+StreamController<GeofenceStatus> _geofenceStreamController =
+    StreamController<GeofenceStatus>();
 StreamController<Map<String, dynamic>> _activityStreamController =
     StreamController<Map<String, dynamic>>();
 StreamController<Location> _locationStreamController =
@@ -42,11 +40,13 @@ StreamController<Location> _locationStreamController =
 
 // 2. Create the provider that listens to these streams
 
-final geofenceStreamProvider = StreamProvider((ref) {
+final geofenceStreamProvider = StreamProvider<GeofenceStatus>((ref) {
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
   // the stream controller
+  print("IS THIS CALLED IN SETUP?");
+  // _geofenceStreamController.sink.add(event)
   return _geofenceStreamController.stream;
 });
 
@@ -75,10 +75,11 @@ Future<void> _onGeofenceStatusChanged(
     GeofenceRadius geofenceRadius,
     GeofenceStatus geofenceStatus,
     Location location) async {
+  print("ARGHHHHH");
   print('geofence: $geofence');
   print('geofenceRadius: $geofenceRadius');
   print('geofenceStatus: ${geofenceStatus.toString()}');
-  _geofenceStreamController.sink.add(geofence);
+  _geofenceStreamController.sink.add(geofenceStatus);
 }
 
 // This function is to be called when the activity has changed.
@@ -135,10 +136,12 @@ void geofenceCallbacks() {
         _onLocationServicesStatusChanged);
     _geofenceService.addActivityChangeListener(_onActivityChanged);
     _geofenceService.addStreamErrorListener(_onError);
-    _geofenceService.start(_geofenceList).catchError(_onError);
+    _geofenceService.start(_geofenceList).catchError(_onError).whenComplete(
+        () => _geofenceStreamController.sink.add(GeofenceStatus.EXIT));
   });
 }
 
+// WRONG SPOT - if we want this working, it has to go before runApp
 WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
   return WillStartForegroundTask(
       onWillStart: () {
@@ -164,7 +167,28 @@ class GeofenceDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    AsyncValue geofenceState = ref.watch(geofenceStreamProvider);
+    return Container(
+        child: Center(
+            child: Center(
+      child: geofenceState.map(data: (data) {
+        return Text(data.value.toString());
+      }, loading: (_) {
+        return Text("Loading");
+      }, error: (_) {
+        return Text("Error");
+      }),
+    )));
+  }
+}
+
+class ActivityDetails extends ConsumerWidget {
+  const ActivityDetails({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     AsyncValue activityState = ref.watch(activityStreamProvider);
+
     return Container(
         child: Center(
       child: activityState.map(data: (data) {
