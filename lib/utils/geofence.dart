@@ -4,7 +4,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geofence_service/geofence_service.dart';
+import 'package:stantonsmarthome/utils/local_vars.dart';
 
+import '../main.dart';
 import 'ble_beacon.dart';
 import 'mqtt_connect.dart';
 
@@ -22,8 +24,8 @@ final _geofenceService = GeofenceService.instance.setup(
 final _geofenceList = <Geofence>[
   Geofence(
     id: 'Home',
-    latitude: 45.410132,
-    longitude: -75.693938,
+    latitude: local_vars["home_latitude"],
+    longitude: local_vars["home_longitude"],
     radius: [
       // GeofenceRadius(id: 'radius_100m', length: 100),
       GeofenceRadius(id: 'radius_25m', length: 25),
@@ -43,20 +45,15 @@ StreamController<Location> _locationStreamController =
 
 // 2. Create the provider that listens to these streams
 
-final geofenceStreamProvider = StreamProvider<GeofenceStatus>((ref) {
+final geofenceStreamProvider = AutoDisposeStreamProvider<GeofenceStatus>((ref) {
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
   // the stream controller
-  if (_geofenceStreamController.stream.last == GeofenceStatus.ENTER) {
-    ref.read(clientStateProvider.notifier).connect();
-    ref.read(beaconStateProvider.notifier).bleOnSwitch();
-    print("THIS WORKED");
-  }
   return _geofenceStreamController.stream;
 });
 
-final activityStreamProvider = StreamProvider((ref) {
+final activityStreamProvider = AutoDisposeStreamProvider((ref) {
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
@@ -64,7 +61,7 @@ final activityStreamProvider = StreamProvider((ref) {
   return _activityStreamController.stream;
 });
 
-final locationStreamProvider = StreamProvider((ref) {
+final locationStreamProvider = AutoDisposeStreamProvider((ref) {
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
@@ -85,6 +82,13 @@ Future<void> _onGeofenceStatusChanged(
   print('geofenceRadius: $geofenceRadius');
   print('geofenceStatus: ${geofenceStatus.toString()}');
   _geofenceStreamController.sink.add(geofenceStatus);
+  if (geofenceStatus == GeofenceStatus.ENTER) {
+    container.read(clientStateProvider.notifier).connect();
+    container.read(beaconStateProvider.notifier).bleOnSwitch();
+  } else if (geofenceStatus == GeofenceStatus.EXIT) {
+    container.read(clientStateProvider.notifier).disconnect();
+    container.read(beaconStateProvider.notifier).bleKillSwitch();
+  }
 }
 
 // This function is to be called when the activity has changed.

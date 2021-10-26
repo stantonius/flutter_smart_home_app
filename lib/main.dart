@@ -56,8 +56,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   void initState() {
     devicePermissions();
 
-    ref.read(clientStateProvider.notifier).connect();
-    ref.read(beaconStateProvider.notifier).bleOnSwitch();
+    // ref.read(clientStateProvider.notifier).connect();
+    // ref.read(beaconStateProvider.notifier).bleOnSwitch();
     // workManager.initialize(
     //     callbackDispatcher, // The top level function, aka callbackDispatcher
     //     isInDebugMode:
