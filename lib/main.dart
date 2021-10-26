@@ -11,7 +11,12 @@ import 'package:permission_handler/permission_handler.dart';
 
 void devicePermissions() async {
   // await Permission.bluetooth.
-  await Permission.location.request().isGranted;
+  // await Permission.location.request().isGranted;
+  Map<Permission, PermissionStatus> statuses = await [
+    Permission.location,
+    Permission.activityRecognition,
+  ].request();
+  print(statuses[Permission.location]);
 }
 
 // Remi recommends against this but I have no other way
@@ -50,9 +55,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   void initState() {
     devicePermissions();
-    geofenceCallbacks();
-    // ref.read(clientStateProvider.notifier).connect();
-    // ref.read(beaconStateProvider.notifier).bleOnSwitch();
+
+    ref.read(clientStateProvider.notifier).connect();
+    ref.read(beaconStateProvider.notifier).bleOnSwitch();
     // workManager.initialize(
     //     callbackDispatcher, // The top level function, aka callbackDispatcher
     //     isInDebugMode:
@@ -62,6 +67,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
     // Future.delayed(Duration(seconds: 20), testFunction);
     super.initState();
+    geofenceCallbacks();
   }
 
   @override

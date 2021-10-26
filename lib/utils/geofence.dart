@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geofence_service/geofence_service.dart';
 
+import 'ble_beacon.dart';
+import 'mqtt_connect.dart';
+
 final _geofenceService = GeofenceService.instance.setup(
     interval: 5000,
     accuracy: 50,
@@ -45,8 +48,11 @@ final geofenceStreamProvider = StreamProvider<GeofenceStatus>((ref) {
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
   // the stream controller
-  print("IS THIS CALLED IN SETUP?");
-  // _geofenceStreamController.sink.add(event)
+  if (_geofenceStreamController.stream.last == GeofenceStatus.ENTER) {
+    ref.read(clientStateProvider.notifier).connect();
+    ref.read(beaconStateProvider.notifier).bleOnSwitch();
+    print("THIS WORKED");
+  }
   return _geofenceStreamController.stream;
 });
 
@@ -75,7 +81,6 @@ Future<void> _onGeofenceStatusChanged(
     GeofenceRadius geofenceRadius,
     GeofenceStatus geofenceStatus,
     Location location) async {
-  print("ARGHHHHH");
   print('geofence: $geofence');
   print('geofenceRadius: $geofenceRadius');
   print('geofenceStatus: ${geofenceStatus.toString()}');

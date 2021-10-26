@@ -45,9 +45,9 @@ class BLESetup extends StateNotifier<Future<bool>> {
 
   // Needed when wifi is not home network, shut off advertising
   void bleKillSwitch() async {
-    print("IS THIS EVEN CALLED?");
     await beacon.stopBroadcast();
     state = beacon.isBroadcasting();
+    print("Turning beacon off");
   }
 }
 
