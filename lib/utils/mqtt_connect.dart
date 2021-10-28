@@ -8,10 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:stantonsmarthome/utils/local_vars.dart';
+import 'package:stantonsmarthome/utils/secret_vars.dart';
 
-final String brokerIPaddress = local_vars['brokerIPaddress'];
-final int brokerPort = local_vars['brokerPort'];
+final String brokerIPaddress = secret_vars['brokerIPaddress'];
+final int brokerPort = secret_vars['brokerPort'];
 final String clientId = "homeApp";
 
 class MqttSetup extends StateNotifier<MqttConnectionState> {

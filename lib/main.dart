@@ -19,7 +19,8 @@ void devicePermissions() async {
   print(statuses[Permission.location]);
 }
 
-// Remi recommends against this but I have no other way
+// Remi recommends against this but I have no other way to acess the state
+// outside of Consumer widget and Providers
 final container = ProviderContainer();
 
 void testFunction() async {

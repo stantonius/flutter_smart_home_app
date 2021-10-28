@@ -21,3 +21,7 @@ Very much in progress. It does work though as an iBeacon.
 - [ ] Enable light switch to turn on/off lights via Node-Red/MQTT
 - [ ] Properly disable all features if not at home
 - [ ] Enable remote access
+
+## Useful Resources
+
+* Using a secrets.dart file that is hidden from version control but still works with Github Actions: https://stackoverflow.com/a/67998780/9739375

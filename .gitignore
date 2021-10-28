@@ -9,7 +9,7 @@
 .buildlog/
 .history
 .svn/
-local_vars.dart
+secret_vars.dart
 
 # IntelliJ related
 *.iml

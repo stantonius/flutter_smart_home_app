@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geofence_service/geofence_service.dart';
-import 'package:stantonsmarthome/utils/local_vars.dart';
+import 'package:stantonsmarthome/utils/secret_vars.dart';
 
 import '../main.dart';
 import 'ble_beacon.dart';
@@ -24,8 +24,8 @@ final _geofenceService = GeofenceService.instance.setup(
 final _geofenceList = <Geofence>[
   Geofence(
     id: 'Home',
-    latitude: local_vars["home_latitude"],
-    longitude: local_vars["home_longitude"],
+    latitude: secret_vars["home_latitude"],
+    longitude: secret_vars["home_longitude"],
     radius: [
       // GeofenceRadius(id: 'radius_100m', length: 100),
       GeofenceRadius(id: 'radius_25m', length: 25),
