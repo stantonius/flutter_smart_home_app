@@ -10,8 +10,8 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:stantonsmarthome/utils/secret_vars.dart';
 
-final String brokerIPaddress = secret_vars['brokerIPaddress'];
-final int brokerPort = secret_vars['brokerPort'];
+final String brokerIPaddress = secretVars['brokerIPaddress'];
+final int brokerPort = secretVars['brokerPort'];
 final String clientId = "homeApp";
 
 class MqttSetup extends StateNotifier<MqttConnectionState> {

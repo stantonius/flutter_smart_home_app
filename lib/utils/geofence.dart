@@ -24,8 +24,8 @@ final _geofenceService = GeofenceService.instance.setup(
 final _geofenceList = <Geofence>[
   Geofence(
     id: 'Home',
-    latitude: secret_vars["home_latitude"],
-    longitude: secret_vars["home_longitude"],
+    latitude: secretVars["homeLatitude"],
+    longitude: secretVars["homeLongitude"],
     radius: [
       // GeofenceRadius(id: 'radius_100m', length: 100),
       GeofenceRadius(id: 'radius_25m', length: 25),
