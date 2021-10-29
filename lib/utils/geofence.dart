@@ -11,8 +11,8 @@ import 'ble_beacon.dart';
 import 'mqtt_connect.dart';
 
 final _geofenceService = GeofenceService.instance.setup(
-    interval: 5000,
-    accuracy: 50,
+    interval: 10000,
+    accuracy: 150,
     loiteringDelayMs: 60000,
     statusChangeDelayMs: 10000,
     useActivityRecognition: true,
