@@ -45,8 +45,8 @@ platform :android do
     firebase_app_distribution(
       app: ENV["FIREBASE_APP_ID"],
       firebase_cli_token: ENV["FIREBASE_APP_TOKEN"],
-      testers: "craig", # group created in Firebase Add Distribution
-      release_notes: "I said HI",
+      groups: "craig", # group created in Firebase Add Distribution
+      release_notes: "Come on big money",
 
       # debug: true,
       # The below two lines referencing AAB can only be used if you link the Google Play account to the app
