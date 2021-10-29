@@ -73,45 +73,48 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            child: Column(
+    return geofenceWidgetWrapper(
+      Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              child: Column(
+                children: [
+                  // Row(
+                  //   children: [Expanded(child: WifiStatus())],
+                  // ),
+                  Row(
+                    children: [Expanded(child: DeviceBTStatus())],
+                  ),
+                  Row(
+                    children: [Expanded(child: GeofenceDetails())],
+                  ),
+                  Row(
+                    children: [Expanded(child: ActivityDetails())],
+                  ),
+                  Row(
+                    children: [Expanded(child: MqttCard())],
+                  ),
+                  Row(
+                    children: [Expanded(child: BLECard())],
+                  )
+                ],
+              ),
+              padding: EdgeInsets.symmetric(vertical: 75),
+            ),
+            Row(
               children: [
-                Row(
-                  children: [Expanded(child: WifiStatus())],
-                ),
-                Row(
-                  children: [Expanded(child: DeviceBTStatus())],
-                ),
-                Row(
-                  children: [Expanded(child: GeofenceDetails())],
-                ),
-                Row(
-                  children: [Expanded(child: ActivityDetails())],
-                ),
-                Row(
-                  children: [Expanded(child: MqttCard())],
-                ),
-                Row(
-                  children: [Expanded(child: BLECard())],
-                )
+                Expanded(
+                    child:
+                        Card(child: LightSwitch(switchText: "Bedroom Light"))),
               ],
             ),
-            padding: EdgeInsets.symmetric(vertical: 75),
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child: Card(child: LightSwitch(switchText: "Bedroom Light"))),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

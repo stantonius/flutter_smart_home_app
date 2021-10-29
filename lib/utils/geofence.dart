@@ -162,8 +162,8 @@ WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
         channelName: 'Geofence Service Notification',
         channelDescription:
             'This notification appears when the geofence service is running in the background.',
-        channelImportance: NotificationChannelImportance.LOW,
-        priority: NotificationPriority.LOW,
+        channelImportance: NotificationChannelImportance.DEFAULT,
+        priority: NotificationPriority.DEFAULT,
       ),
       iosNotificationOptions: IOSNotificationOptions(),
       notificationTitle: 'Geofence Service is running',
