@@ -157,6 +157,7 @@ WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
         // You can add a foreground task start condition.
         return _geofenceService.isRunningService;
       },
+      foregroundTaskOptions: ForegroundTaskOptions(autoRunOnBoot: true),
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'geofence_service_notification_channel',
         channelName: 'Geofence Service Notification',
