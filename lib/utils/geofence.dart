@@ -16,7 +16,7 @@ final _geofenceService = GeofenceService.instance.setup(
     loiteringDelayMs: 60000,
     statusChangeDelayMs: 10000,
     useActivityRecognition: true,
-    allowMockLocations: false,
+    allowMockLocations: true,
     printDevLog: true,
     geofenceRadiusSortType: GeofenceRadiusSortType.DESC);
 
