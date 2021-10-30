@@ -13,7 +13,7 @@ void devicePermissions() async {
   // await Permission.bluetooth.
   // await Permission.location.request().isGranted;
   Map<Permission, PermissionStatus> statuses = await [
-    Permission.location,
+    Permission.locationAlways,
     Permission.activityRecognition,
   ].request();
   print(statuses[Permission.location]);
