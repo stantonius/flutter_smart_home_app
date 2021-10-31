@@ -1,40 +1,48 @@
-// import 'package:flutter_beacon/flutter_beacon.dart';
-// import 'package:stantonsmarthome/main.dart';
-// import 'package:stantonsmarthome/utils/ble_beacon.dart';
-// import 'package:workmanager/workmanager.dart';
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-// /// The callbackDispatcher initiates a Workmanager task
-// /// Workmanager tasks must first be registered elsewhere in the code
-// /// Then the registered task, and any input data needed (passed as a map),
-// /// are given to the callbackDispatcher.
-// /// It is within each case in the callbackDispatcher that the background function
-// /// is specified.
+// class SmartHomePermissions {
 
-// final workManager = Workmanager();
+//   bool requiredPermissionsGranted = false;
 
-// const checkBLE = "checkBLE";
-
-// void callbackDispatcher() {
-//   workManager.executeTask((task, inputData) async {
-//     switch (task) {
-//       case checkBLE:
-//         final beacon = flutterBeacon;
-//         beacon.startBroadcast(broadcastSettings);
-//         // container.read(beaconStateProvider.notifier).bleOnSwitch();
-//         print("Starting background task - turning on BLE");
-
-//         // final bleStateNotifier = container.read(beaconStateProvider.notifier);
-//         // bleStateNotifier.bleKillSwitch();
-//         // print("Ending background task. Current state is $currentBLEState");
-//         break;
+//   static Future<bool> checkAndRequestPermissions() async {
+//     bool isPermissionGranted = await _checkPermissions();
+//     if (!isPermissionGranted) {
+//       await _requestPermissions();
 //     }
-//     //simpleTask will be emitted here.
-//     return Future.value(true);
-//   });
-// }
+//     return isPermissionGranted;
+//   }
 
-// void registerWorkmanagerTasks() {
-//   workManager.registerPeriodicTask("1", checkBLE,
-//       // initialDelay: Duration(minutes: 2),
-//       frequency: Duration(minutes: 2));
-// }
+//   static Future<bool> _checkPermissions() async {
+//     bool isPermissionGranted = true;
+//     PermissionStatus permissionStatus = await PermissionHandler()
+//         .checkPermissionStatus(PermissionGroup.location);
+//     if (permissionStatus != PermissionStatus.granted) {
+//       isPermissionGranted = false;
+//     }
+//     return isPermissionGranted;
+//   }
+
+//   static Future<void> _requestPermissions() async {
+//     var locationStatus = await Permission.location.status;
+//     var activityStatus = await Permission.activityRecognition.status;
+//   }
+
+void devicePermissions() async {
+  var locationStatus = await Permission.location.status;
+  var activityStatus = await Permission.activityRecognition.status;
+
+  if (locationStatus.isGranted == false) {
+    await Permission.location.request();
+  }
+
+  if (activityStatus.isGranted == false) {
+    await Permission.activityRecognition.request();
+  }
+
+  if (locationStatus.isGranted == true) {
+    await Permission.locationAlways.request();
+  }
+
+  // ToDO:
+}
