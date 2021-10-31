@@ -41,8 +41,8 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "2.5.x"
-          # channel: "beta"
+          # flutter-version: "2.5.x"
+          channel: "beta"
       # - uses: actions/cache@v1
       #   with:
       #     path: ${{ matrix.flutter_path }}
@@ -75,4 +75,3 @@ jobs:
         env:
           FIREBASE_APP_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-          
