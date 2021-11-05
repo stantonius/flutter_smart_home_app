@@ -8,8 +8,6 @@ import 'package:stantonsmarthome/utils/ble_beacon.dart';
 import 'package:stantonsmarthome/utils/device_bluetooth.dart';
 import 'package:stantonsmarthome/utils/geofence.dart';
 import 'package:stantonsmarthome/utils/mqtt_connect.dart';
-import 'package:stantonsmarthome/utils/wifi_setup.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Remi recommends against this but I have no other way to acess the state
 // outside of Consumer widget and Providers
@@ -50,21 +48,21 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   void initState() {
     super.initState();
     geofenceCallbacks();
-    WidgetsBinding.instance!.addObserver(this);
+    // WidgetsBinding.instance!.addObserver(this);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
-    container.read(beaconStateProvider.notifier).bleKillSwitch();
+    // container.read(beaconStateProvider.notifier).bleKillSwitch();
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.detached) {}
-    print("TRIGGERED");
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.detached) {}
+  //   print("TRIGGERED");
+  // }
 
   @override
   Widget build(BuildContext context) {

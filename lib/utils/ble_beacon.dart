@@ -21,6 +21,12 @@ class BLESetup extends StateNotifier<Future<bool>> {
 
   BLESetup({required this.beacon}) : super(beacon.isBroadcasting());
 
+  @override
+  void dispose() {
+    super.dispose();
+    beacon.stopBroadcast();
+  }
+
   void broadcastOnOff() async {
     if (await beacon.isBroadcasting()) {
       print("Turning beacon off");
