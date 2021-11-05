@@ -167,7 +167,7 @@ WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
         priority: NotificationPriority.LOW,
       ),
       iosNotificationOptions: IOSNotificationOptions(),
-      notificationTitle: 'Geofence Service is running',
+      notificationTitle: 'StantonSmartHome is running',
       notificationText: 'Tap to return to the app',
       child: scaffoldWidget);
 }
