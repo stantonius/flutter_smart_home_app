@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stantonsmarthome/utils/mqtt_connect.dart';
 
-// current topic - placeholde ris testing topic
-const String pubTopic = "Testing/ButtonClick";
+// current topic
+const String pubTopic = "Lights/manualSwitch";
 
 class LightSwitch extends ConsumerStatefulWidget {
   final String switchText;
@@ -29,7 +29,7 @@ class _LightSwitchState extends ConsumerState<LightSwitch> {
           });
           ref
               .read(clientStateProvider.notifier)
-              .sendMessage("Testing/LightSwitch", _toggled.toString());
+              .sendMessage(pubTopic, _toggled.toString());
         },
       ),
     );

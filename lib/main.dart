@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stantonsmarthome/components/switch.dart';
+import 'package:stantonsmarthome/utils/lightswitch.dart';
 import 'package:stantonsmarthome/theme/custom_colours.dart';
 import 'package:stantonsmarthome/theme/custom_theme.dart';
 import 'package:stantonsmarthome/utils/background.dart';
@@ -44,12 +44,26 @@ class MyHomePage extends ConsumerStatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends ConsumerState<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    // devicePermissions();
     geofenceCallbacks();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    container.read(beaconStateProvider.notifier).bleKillSwitch();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.detached) {}
+    print("TRIGGERED");
   }
 
   @override
