@@ -74,9 +74,10 @@ final bleFutureStateProvider =
 // })
 
 // Here is where we integrate the device BT state stream and
-final getDeviceBTState = Provider((ref) {
-  ref.read(btDeviceStreamProvider);
-});
+// final getDeviceBTState = Provider.autoDispose((ref) {
+
+//   ref.read(btDeviceStreamProvider);
+// });
 
 /// 3. BLE Clickable Card
 

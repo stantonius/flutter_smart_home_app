@@ -54,7 +54,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   @override
   void dispose() {
     WidgetsBinding.instance!.removeObserver(this);
-    // container.read(beaconStateProvider.notifier).bleKillSwitch();
+    container.read(beaconStateProvider).disconnect();
     super.dispose();
   }
 

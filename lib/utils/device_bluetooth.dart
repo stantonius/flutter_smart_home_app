@@ -25,7 +25,11 @@ class BTDeviceState extends StateNotifier<Future<BluetoothState>> {
 final btDeviceStateProvider = StateNotifierProvider(
     (ref) => BTDeviceState(beacon: flutterBeacon, ref: ref));
 
-final btDeviceStreamProvider = StreamProvider((ref) {
+final btDeviceStreamProvider = StreamProvider.autoDispose((ref) {
+  ref.onDispose(() {
+    ref.read(btDeviceStateProvider).beacon.stopAdvertising();
+  });
+
   return ref.watch(btDeviceStateProvider.notifier).btDeviceStateChanged();
 });
 
