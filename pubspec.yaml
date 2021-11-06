@@ -40,7 +40,10 @@ dependencies:
   geofence_service: ^3.4.0
 
 dependency_overrides:
-  flutter_foreground_service:
+  flutter_foreground_task:
+    git:
+      url: https://github.com/Dev-hwang/flutter_foreground_task.git
+      ref: fix_remote_service_exception
 
 dev_dependencies:
   flutter_test:
