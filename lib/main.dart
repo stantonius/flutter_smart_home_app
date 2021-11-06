@@ -4,7 +4,7 @@ import 'package:stantonsmarthome/utils/lightswitch.dart';
 import 'package:stantonsmarthome/theme/custom_colours.dart';
 import 'package:stantonsmarthome/theme/custom_theme.dart';
 import 'package:stantonsmarthome/utils/background.dart';
-import 'package:stantonsmarthome/utils/ble_beacon.dart';
+import 'package:stantonsmarthome/utils/ble_beacon2.dart';
 import 'package:stantonsmarthome/utils/device_bluetooth.dart';
 import 'package:stantonsmarthome/utils/geofence.dart';
 import 'package:stantonsmarthome/utils/mqtt_connect.dart';
