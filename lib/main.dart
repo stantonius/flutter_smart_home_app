@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stantonsmarthome/utils/channels.dart';
 import 'package:stantonsmarthome/utils/lightswitch.dart';
 import 'package:stantonsmarthome/theme/custom_colours.dart';
 import 'package:stantonsmarthome/theme/custom_theme.dart';
@@ -117,6 +118,11 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                 Expanded(
                     child:
                         Card(child: LightSwitch(switchText: "Bedroom Light"))),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(child: SampleAndroidAPI()),
               ],
             ),
           ],
