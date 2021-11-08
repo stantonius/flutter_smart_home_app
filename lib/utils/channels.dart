@@ -12,21 +12,23 @@ class SampleAndroidAPI extends StatefulWidget {
 }
 
 class _SampleAndroidAPIState extends State<SampleAndroidAPI> {
-  static const platform = MethodChannel('samples.flutter.dev/battery');
+  static const platform = MethodChannel('com.stantonius/beacon');
 
-  String _batteryLevel = 'Unknown battery level.';
+  String _deviceTransmissionSupport = 'Unknown device transmission support';
 
-  Future<void> _getBatteryLevel() async {
-    String batteryLevel;
+  Future<void> _checkDeviceTransmissionSupport() async {
+    String deviceTransmissionSupport;
     try {
-      final int result = await platform.invokeMethod('getBatteryLevel');
-      batteryLevel = 'Battery level at $result % .';
+      final int result =
+          await platform.invokeMethod('checkDeviceTransmissionSupport');
+      deviceTransmissionSupport = 'Device transmission support is $result % .';
     } on PlatformException catch (e) {
-      batteryLevel = "Failed to get battery level: '${e.message}'.";
+      deviceTransmissionSupport =
+          "Failed to get device transmission support: '${e.message}'.";
     }
 
     setState(() {
-      _batteryLevel = batteryLevel;
+      _deviceTransmissionSupport = deviceTransmissionSupport;
     });
   }
 
@@ -39,9 +41,9 @@ class _SampleAndroidAPIState extends State<SampleAndroidAPI> {
           children: [
             ElevatedButton(
               child: Text('Is Transmission Supported?'),
-              onPressed: _getBatteryLevel,
+              onPressed: _checkDeviceTransmissionSupport,
             ),
-            Text(_batteryLevel),
+            Text(_deviceTransmissionSupport),
           ],
         ),
       ),

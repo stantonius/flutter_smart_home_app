@@ -12,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class BTDeviceState extends StateNotifier<Future<BluetoothState>> {
   final FlutterBeacon beacon;
   // Below is to allow access to the BLE provider outside of build
-  final ProviderRefBase ref;
+  final Ref ref;
   BTDeviceState({required this.beacon, required this.ref})
       : super(beacon.bluetoothState);
 
@@ -27,7 +27,7 @@ final btDeviceStateProvider = StateNotifierProvider(
 
 final btDeviceStreamProvider = StreamProvider.autoDispose((ref) {
   ref.onDispose(() {
-    ref.read(btDeviceStateProvider).beacon.stopAdvertising();
+    ref.read(btDeviceStateProvider.notifier).beacon.stopBroadcast();
   });
 
   return ref.watch(btDeviceStateProvider.notifier).btDeviceStateChanged();
@@ -46,8 +46,8 @@ class DeviceBTStatus extends ConsumerWidget {
             data: (data) {
               return Text("Device Bluetooth State: $data");
             },
-            loading: (asyncVal) => CircularProgressIndicator(),
-            error: (e, st, asyncVal) => Text("$st")),
+            loading: () => CircularProgressIndicator(),
+            error: (e, st) => Text("$st")),
       ),
     );
   }

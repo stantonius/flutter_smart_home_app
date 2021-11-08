@@ -115,8 +115,8 @@ class BLECard extends ConsumerWidget {
               children: [
                 currentBLEState.when(
                     data: (data) => Text("Broadcasting State $data"),
-                    loading: (asyncVal) => Text("Broadcasting State Loading"),
-                    error: (e, st, asyncVal) => Text("Error: $e")),
+                    loading: () => Text("Broadcasting State Loading"),
+                    error: (e, stl) => Text("Error: $e")),
                 bleConnIcon(currentBLEState.whenData((value) => value))
               ],
             ),
