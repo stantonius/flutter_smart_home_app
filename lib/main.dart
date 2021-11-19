@@ -49,26 +49,26 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     with WidgetsBindingObserver {
   @override
   void initState() {
-    super.initState();
     geofenceCallbacks();
     WidgetsBinding.instance!.addObserver(this);
+    super.initState();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    /// Log app life cycle state
-    print("The Lifecycle State is ${state}");
-    // final lifecycleProvider = Provider<AppLifecycleState>((ref) {
-    //   return state;
-    // });
-    lifecycleProvider = Provider<AppLifecycleState>((ref) {
-      return state;
-    });
-    print("The lifecycle provider is ${container.read(lifecycleProvider)}");
-    if (state == AppLifecycleState.detached) {
-      beaconChannelBridge.stopBroadcastBeacon();
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   /// Log app life cycle state
+  //   print("The Lifecycle State is ${state}");
+  //   // final lifecycleProvider = Provider<AppLifecycleState>((ref) {
+  //   //   return state;
+  //   // });
+  //   lifecycleProvider = Provider<AppLifecycleState>((ref) {
+  //     return state;
+  //   });
+  //   print("The lifecycle provider is ${container.read(lifecycleProvider)}");
+  //   if (state == AppLifecycleState.detached) {
+  //     beaconChannelBridge.stopBroadcastBeacon();
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -113,9 +113,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   Row(
                     children: [Expanded(child: GeofenceDetails())],
                   ),
-                  Row(
-                    children: [Expanded(child: ActivityDetails())],
-                  ),
+                  // Row(
+                  //   children: [Expanded(child: ActivityDetails())],
+                  // ),
                   Row(
                     children: [Expanded(child: MqttCard())],
                   ),

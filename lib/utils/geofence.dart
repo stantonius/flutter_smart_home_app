@@ -154,31 +154,31 @@ void geofenceCallbacks() {
 }
 
 dynamic geofenceWidgetWrapper(Widget scaffoldWidget) {
-  if (container.read(lifecycleProvider) != AppLifecycleState.detached) {
-    print("THIS DIDDD WOYK");
-    return WillStartForegroundTask(
-        onWillStart: () async {
-          // You can add a foreground task start condition.
+  // if (container.read(lifecycleProvider) != AppLifecycleState.detached) {
+  //   print("THIS DIDDD WOYK");
+  return WillStartForegroundTask(
+      onWillStart: () async {
+        // You can add a foreground task start condition.
 
-          return geofenceService.isRunningService;
-        },
-        foregroundTaskOptions: ForegroundTaskOptions(autoRunOnBoot: true),
-        androidNotificationOptions: AndroidNotificationOptions(
-          channelId: 'geofence_service_notification_channel',
-          channelName: 'Geofence Service Notification',
-          channelDescription:
-              'This notification appears when the geofence service is running in the background.',
-          channelImportance: NotificationChannelImportance.DEFAULT,
-          priority: NotificationPriority.LOW,
-        ),
-        iosNotificationOptions: IOSNotificationOptions(),
-        notificationTitle: 'StantonSmartHome is running',
-        notificationText: 'Tap to return to the app',
-        child: scaffoldWidget);
-  } else {
-    print("THIS DIDN WORK");
-    return Container();
-  }
+        return geofenceService.isRunningService;
+      },
+      foregroundTaskOptions: ForegroundTaskOptions(autoRunOnBoot: true),
+      androidNotificationOptions: AndroidNotificationOptions(
+        channelId: 'geofence_service_notification_channel',
+        channelName: 'Geofence Service Notification',
+        channelDescription:
+            'This notification appears when the geofence service is running in the background.',
+        channelImportance: NotificationChannelImportance.DEFAULT,
+        priority: NotificationPriority.LOW,
+      ),
+      iosNotificationOptions: IOSNotificationOptions(),
+      notificationTitle: 'StantonSmartHome is running',
+      notificationText: 'Tap to return to the app',
+      child: scaffoldWidget);
+  // } else {
+  //   print("THIS DIDN WORK");
+  //   return Container();
+  // }
 }
 
 class GeofenceDetails extends ConsumerWidget {
