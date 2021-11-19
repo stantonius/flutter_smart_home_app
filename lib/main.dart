@@ -6,13 +6,15 @@ import 'package:stantonsmarthome/theme/custom_colours.dart';
 import 'package:stantonsmarthome/theme/custom_theme.dart';
 import 'package:stantonsmarthome/utils/background.dart';
 import 'package:stantonsmarthome/utils/ble_beacon.dart';
-import 'package:stantonsmarthome/utils/device_bluetooth.dart';
 import 'package:stantonsmarthome/utils/geofence.dart';
 import 'package:stantonsmarthome/utils/mqtt_connect.dart';
 
 // Remi recommends against this but I have no other way to acess the state
 // outside of Consumer widget and Providers
 final container = ProviderContainer();
+
+var lifecycleProvider =
+    Provider<AppLifecycleState>((ref) => AppLifecycleState.inactive);
 
 void testFunction() async {
   // callbackDispatcher();
@@ -49,21 +51,32 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   void initState() {
     super.initState();
     geofenceCallbacks();
-    // WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    /// Log app life cycle state
+    print("The Lifecycle State is ${state}");
+    // final lifecycleProvider = Provider<AppLifecycleState>((ref) {
+    //   return state;
+    // });
+    lifecycleProvider = Provider<AppLifecycleState>((ref) {
+      return state;
+    });
+    print("The lifecycle provider is ${container.read(lifecycleProvider)}");
+    if (state == AppLifecycleState.detached) {
+      beaconChannelBridge.stopBroadcastBeacon();
+    }
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
     container.read(beaconStateProvider.notifier).bleKillSwitch();
+    WidgetsBinding.instance!.removeObserver(this);
+    // print("Flutter dispose called");
     super.dispose();
   }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.detached) {}
-  //   print("TRIGGERED");
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -94,9 +107,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   //   children: [Expanded(child: WifiStatus())],
                   // ),
 
-                  Row(
-                    children: [Expanded(child: DeviceBTStatus())],
-                  ),
+                  // Row(
+                  //   children: [Expanded(child: DeviceBTStatus())],
+                  // ),
                   Row(
                     children: [Expanded(child: GeofenceDetails())],
                   ),
@@ -122,7 +135,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
             ),
             Row(
               children: [
-                Expanded(child: SampleAndroidAPI()),
+                // Expanded(child: SampleAndroidAPI()),
               ],
             ),
           ],
