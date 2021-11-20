@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geofence_service/geofence_service.dart';
 import 'package:stantonsmarthome/utils/secret_vars.dart';
+import 'package:stantonsmarthome/utils/toggle_background_run.dart';
 
 import '../main.dart';
 import 'ble_beacon.dart';
@@ -153,14 +154,18 @@ void geofenceCallbacks() {
   });
 }
 
-dynamic geofenceWidgetWrapper(Widget scaffoldWidget) {
-  // if (container.read(lifecycleProvider) != AppLifecycleState.detached) {
-  //   print("THIS DIDDD WOYK");
+WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
   return WillStartForegroundTask(
       onWillStart: () async {
         // You can add a foreground task start condition.
-
-        return geofenceService.isRunningService;
+        // print("On will start called");
+        if (container.read(toggleBackgroundRun) == false) {
+          geofenceService.pause();
+          return false;
+        } else {
+          geofenceService.resume();
+          return geofenceService.isRunningService;
+        }
       },
       foregroundTaskOptions: ForegroundTaskOptions(autoRunOnBoot: true),
       androidNotificationOptions: AndroidNotificationOptions(
@@ -175,10 +180,6 @@ dynamic geofenceWidgetWrapper(Widget scaffoldWidget) {
       notificationTitle: 'StantonSmartHome is running',
       notificationText: 'Tap to return to the app',
       child: scaffoldWidget);
-  // } else {
-  //   print("THIS DIDN WORK");
-  //   return Container();
-  // }
 }
 
 class GeofenceDetails extends ConsumerWidget {

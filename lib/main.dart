@@ -8,13 +8,14 @@ import 'package:stantonsmarthome/utils/background.dart';
 import 'package:stantonsmarthome/utils/ble_beacon.dart';
 import 'package:stantonsmarthome/utils/geofence.dart';
 import 'package:stantonsmarthome/utils/mqtt_connect.dart';
+import 'package:stantonsmarthome/utils/toggle_background_run.dart';
 
 // Remi recommends against this but I have no other way to acess the state
 // outside of Consumer widget and Providers
 final container = ProviderContainer();
 
-var lifecycleProvider =
-    Provider<AppLifecycleState>((ref) => AppLifecycleState.inactive);
+// var lifecycleProvider =
+//     Provider<AppLifecycleState>((ref) => AppLifecycleState.inactive);
 
 void testFunction() async {
   // callbackDispatcher();
@@ -54,27 +55,36 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     super.initState();
   }
 
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   /// Log app life cycle state
-  //   print("The Lifecycle State is ${state}");
-  //   // final lifecycleProvider = Provider<AppLifecycleState>((ref) {
-  //   //   return state;
-  //   // });
-  //   lifecycleProvider = Provider<AppLifecycleState>((ref) {
-  //     return state;
-  //   });
-  //   print("The lifecycle provider is ${container.read(lifecycleProvider)}");
-  //   if (state == AppLifecycleState.detached) {
-  //     beaconChannelBridge.stopBroadcastBeacon();
-  //   }
-  // }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    /// Log app life cycle state
+    print("The Lifecycle State is ${state}");
+    // final lifecycleProvider = Provider<AppLifecycleState>((ref) {
+    //   return state;
+    // });
+    // lifecycleProvider = Provider<AppLifecycleState>((ref) {
+    //   return state;
+    // });
+    // print("The lifecycle provider is ${container.read(lifecycleProvider)}");
+    // if (state == AppLifecycleState.inactive) {
+    //   beaconChannelBridge.stopBroadcastBeacon();
+    // }
+    // if (state == AppLifecycleState.paused) {
+    //   beaconChannelBridge.stopBroadcastBeacon();
+    // }
+    // if (state == AppLifecycleState.resumed) {
+    //   beaconChannelBridge.startBroadcastBeacon(beaconParams.toMap());
+    // }
+  }
 
   @override
   void dispose() {
     container.read(beaconStateProvider.notifier).bleKillSwitch();
     WidgetsBinding.instance!.removeObserver(this);
-    // print("Flutter dispose called");
+    print("Flutter dispose called");
+    geofenceService.stop();
     super.dispose();
   }
 
@@ -103,6 +113,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
             Container(
               child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                  ),
                   // Row(
                   //   children: [Expanded(child: WifiStatus())],
                   // ),
@@ -113,9 +126,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   Row(
                     children: [Expanded(child: GeofenceDetails())],
                   ),
-                  // Row(
-                  //   children: [Expanded(child: ActivityDetails())],
-                  // ),
+                  Row(
+                    children: [Expanded(child: ActivityDetails())],
+                  ),
                   Row(
                     children: [Expanded(child: MqttCard())],
                   ),
@@ -136,6 +149,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
             Row(
               children: [
                 // Expanded(child: SampleAndroidAPI()),
+                Expanded(
+                  child: ToggleBackgroundRun(),
+                )
               ],
             ),
           ],
