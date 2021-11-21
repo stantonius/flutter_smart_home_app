@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Initially I tried to a) get the device Bluetooth state and b) start/stop broadcasting
