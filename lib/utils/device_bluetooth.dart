@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:stantonsmarthome/utils/channels.dart';
 
 /// Initially I tried to a) get the device Bluetooth state and b) start/stop broadcasting
 /// but it became to complicated. So now breaking it up into 2 separate providers.
@@ -9,12 +10,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// This provider returns a Future<BlutetoothState>, which is annoying to work with
 /// and part of the reason
 
-class BTDeviceState extends StateNotifier<Future<BluetoothState>> {
-  final FlutterBeacon beacon;
+class BTDeviceState extends StateNotifier<Future<bool>> {
+  final BeaconChannelBridge beacon;
   // Below is to allow access to the BLE provider outside of build
-  final ProviderRefBase ref;
+  final ref;
   BTDeviceState({required this.beacon, required this.ref})
-      : super(beacon.bluetoothState);
+      : super(beacon.isBroadcasting());
 
   Stream<BluetoothState> btDeviceStateChanged() {
     // ref.read(beaconStateProvider.notifier).bleKillSwitch();
@@ -23,11 +24,11 @@ class BTDeviceState extends StateNotifier<Future<BluetoothState>> {
 }
 
 final btDeviceStateProvider = StateNotifierProvider(
-    (ref) => BTDeviceState(beacon: flutterBeacon, ref: ref));
+    (ref) => BTDeviceState(beacon: beaconChannelBridge, ref: ref));
 
 final btDeviceStreamProvider = StreamProvider.autoDispose((ref) {
   ref.onDispose(() {
-    ref.read(btDeviceStateProvider).beacon.stopAdvertising();
+    ref.read(btDeviceStateProvider.notifier).beacon.stopBroadcastBeacon();
   });
 
   return ref.watch(btDeviceStateProvider.notifier).btDeviceStateChanged();
@@ -46,8 +47,8 @@ class DeviceBTStatus extends ConsumerWidget {
             data: (data) {
               return Text("Device Bluetooth State: $data");
             },
-            loading: (asyncVal) => CircularProgressIndicator(),
-            error: (e, st, asyncVal) => Text("$st")),
+            loading: () => CircularProgressIndicator(),
+            error: (e, st) => Text("$st")),
       ),
     );
   }

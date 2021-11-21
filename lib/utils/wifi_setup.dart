@@ -34,8 +34,8 @@ class WifiStatus extends ConsumerWidget {
               data: (data) {
                 return Text("Current Wifi Network: $data");
               },
-              loading: (asyncVal) => CircularProgressIndicator(),
-              error: (e, st, asyncVal) => Text("$st"))),
+              loading: () => CircularProgressIndicator(),
+              error: (e, st) => Text("$st"))),
     );
   }
 }

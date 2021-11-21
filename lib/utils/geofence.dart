@@ -46,6 +46,9 @@ StreamController<Location> _locationStreamController =
 // 2. Create the provider that listens to these streams
 
 final geofenceStreamProvider = AutoDisposeStreamProvider<GeofenceStatus>((ref) {
+  ref.onDispose(() {
+    _geofenceStreamController.close();
+  });
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
@@ -54,6 +57,9 @@ final geofenceStreamProvider = AutoDisposeStreamProvider<GeofenceStatus>((ref) {
 });
 
 final activityStreamProvider = AutoDisposeStreamProvider((ref) {
+  ref.onDispose(() {
+    _activityStreamController.close();
+  });
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
@@ -62,6 +68,9 @@ final activityStreamProvider = AutoDisposeStreamProvider((ref) {
 });
 
 final locationStreamProvider = AutoDisposeStreamProvider((ref) {
+  ref.onDispose(() {
+    _locationStreamController.close();
+  });
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
@@ -150,12 +159,11 @@ void geofenceCallbacks() {
   });
 }
 
-// WRONG SPOT - if we want this working, it has to go before runApp
 WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
   return WillStartForegroundTask(
-      onWillStart: () {
+      onWillStart: () async {
         // You can add a foreground task start condition.
-        return _geofenceService.isRunningService;
+        return await _geofenceService.isRunningService;
       },
       foregroundTaskOptions: ForegroundTaskOptions(autoRunOnBoot: true),
       androidNotificationOptions: AndroidNotificationOptions(
@@ -165,6 +173,7 @@ WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
             'This notification appears when the geofence service is running in the background.',
         channelImportance: NotificationChannelImportance.DEFAULT,
         priority: NotificationPriority.LOW,
+        isSticky: false,
       ),
       iosNotificationOptions: IOSNotificationOptions(),
       notificationTitle: 'StantonSmartHome is running',
