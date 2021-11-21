@@ -36,12 +36,11 @@ class MainActivity : FlutterActivity() {
                 val deviceTransmissionSupport = checkDeviceTransmissionSupport(context)
                 result.success(deviceTransmissionSupport.toInt())
             } else if (call.method == "startBroadcastBeacon") {
-                Log.d("ARGHHH", "PRINTING FROM NATIVE")
+                // Log.d("ARGHHH", "PRINTING FROM NATIVE")
                 val _startBroadcasting = startBroadcastBeacon(call)
                 result.success(_startBroadcasting)
             } else if (call.method == "stopBroadcastBeacon") {
                 val _stopBroadcasting = stopBroadcastBeacon(context)
-                Log.d("STOP CALLED", "STOPPP")
                 result.success(_stopBroadcasting)
             } else if (call.method == "isBroadcasting") {
                 val _isBroadcasting = isBroadcasting(context)

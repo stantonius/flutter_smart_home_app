@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geofence_service/geofence_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stantonsmarthome/utils/secret_vars.dart';
 import 'package:stantonsmarthome/utils/toggle_background_run.dart';
 
@@ -47,7 +48,10 @@ StreamController<Location> locationStreamController =
 // 2. Create the provider that listens to these streams
 
 final geofenceStreamProvider = AutoDisposeStreamProvider<GeofenceStatus>((ref) {
-  ref.onDispose(() => geofenceStreamController.sink.close());
+  ref.onDispose(() {
+    print("GEOFENCE STREAM CLOSED ON DISPOSE");
+    geofenceStreamController.sink.close();
+  });
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
@@ -56,7 +60,10 @@ final geofenceStreamProvider = AutoDisposeStreamProvider<GeofenceStatus>((ref) {
 });
 
 final activityStreamProvider = AutoDisposeStreamProvider((ref) {
-  ref.onDispose(() => activityStreamController.sink.close());
+  ref.onDispose(() {
+    print("ACTIVITY STREAM CLOSED ON DISPOSE");
+    activityStreamController.sink.close();
+  });
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
@@ -143,29 +150,34 @@ void geofenceCallbacks() {
 }
    */
   WidgetsBinding.instance?.addPostFrameCallback((_) {
-    geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-    geofenceService.addLocationChangeListener(_onLocationChanged);
-    geofenceService.addLocationServicesStatusChangeListener(
-        _onLocationServicesStatusChanged);
-    geofenceService.addActivityChangeListener(_onActivityChanged);
-    geofenceService.addStreamErrorListener(_onError);
-    geofenceService.start(_geofenceList).catchError(_onError).whenComplete(
-        () => geofenceStreamController.sink.add(GeofenceStatus.EXIT));
+    if (!geofenceService.isRunningService) {
+      geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+      geofenceService.addLocationChangeListener(_onLocationChanged);
+      geofenceService.addLocationServicesStatusChangeListener(
+          _onLocationServicesStatusChanged);
+      geofenceService.addActivityChangeListener(_onActivityChanged);
+      geofenceService.addStreamErrorListener(_onError);
+      geofenceService.start(_geofenceList).catchError(_onError).whenComplete(
+          () => geofenceStreamController.sink.add(GeofenceStatus.EXIT));
+    }
   });
 }
 
 WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
   return WillStartForegroundTask(
       onWillStart: () async {
-        // You can add a foreground task start condition.
-        // print("On will start called");
-        if (container.read(toggleBackgroundRun) == false) {
-          geofenceService.pause();
-          return false;
+        bool runBackground = false;
+        if (container.read(lifecycleProvider) != AppLifecycleState.detached) {
+          print("Service is being stopped whoaaa");
+          runBackground = true;
+          // geofenceService.clearAllListeners();
         } else {
-          geofenceService.resume();
-          return geofenceService.isRunningService;
+          geofenceService.stop();
         }
+        // You can add a foreground task start condition.
+
+        // return await container.read(toggleBackgroundRun);
+        return runBackground;
       },
       foregroundTaskOptions: ForegroundTaskOptions(autoRunOnBoot: true),
       androidNotificationOptions: AndroidNotificationOptions(
@@ -175,6 +187,7 @@ WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
             'This notification appears when the geofence service is running in the background.',
         channelImportance: NotificationChannelImportance.DEFAULT,
         priority: NotificationPriority.LOW,
+        isSticky: false,
       ),
       iosNotificationOptions: IOSNotificationOptions(),
       notificationTitle: 'StantonSmartHome is running',

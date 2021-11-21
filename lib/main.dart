@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stantonsmarthome/utils/channels.dart';
 import 'package:stantonsmarthome/utils/lightswitch.dart';
 import 'package:stantonsmarthome/theme/custom_colours.dart';
@@ -14,8 +15,8 @@ import 'package:stantonsmarthome/utils/toggle_background_run.dart';
 // outside of Consumer widget and Providers
 final container = ProviderContainer();
 
-// var lifecycleProvider =
-//     Provider<AppLifecycleState>((ref) => AppLifecycleState.inactive);
+var lifecycleProvider =
+    StateProvider<AppLifecycleState>((ref) => AppLifecycleState.detached);
 
 void testFunction() async {
   // callbackDispatcher();
@@ -50,33 +51,23 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     with WidgetsBindingObserver {
   @override
   void initState() {
+    print("Init state called");
     geofenceCallbacks();
     WidgetsBinding.instance!.addObserver(this);
     super.initState();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
 
     /// Log app life cycle state
     print("The Lifecycle State is ${state}");
-    // final lifecycleProvider = Provider<AppLifecycleState>((ref) {
-    //   return state;
-    // });
-    // lifecycleProvider = Provider<AppLifecycleState>((ref) {
-    //   return state;
-    // });
-    // print("The lifecycle provider is ${container.read(lifecycleProvider)}");
-    // if (state == AppLifecycleState.inactive) {
-    //   beaconChannelBridge.stopBroadcastBeacon();
-    // }
-    // if (state == AppLifecycleState.paused) {
-    //   beaconChannelBridge.stopBroadcastBeacon();
-    // }
-    // if (state == AppLifecycleState.resumed) {
-    //   beaconChannelBridge.startBroadcastBeacon(beaconParams.toMap());
-    // }
+    if (state == AppLifecycleState.detached) {
+      print("Detatched state called and set");
+      ref.read(toggleBackgroundRun.notifier).state = false;
+    }
+    ref.read(lifecycleProvider.notifier).state = state;
   }
 
   @override
@@ -84,7 +75,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     container.read(beaconStateProvider.notifier).bleKillSwitch();
     WidgetsBinding.instance!.removeObserver(this);
     print("Flutter dispose called");
-    geofenceService.stop();
+    // geofenceService.stop();
     super.dispose();
   }
 

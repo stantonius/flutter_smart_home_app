@@ -38,6 +38,8 @@ dependencies:
   firebase_core: ^1.10.0
   # firebase_analytics: ^5.0.2
   geofence_service: ^3.4.4
+  shared_preferences: ^2.0.9
+  flutter_foreground_task: ^3.2.3
 
 dev_dependencies:
   flutter_test:
