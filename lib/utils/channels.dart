@@ -1,50 +1,52 @@
 /// Channels for creating platform-specific code to integrate with our Flutter app
-
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class SampleAndroidAPI extends StatefulWidget {
-  SampleAndroidAPI({Key? key}) : super(key: key);
+/// Layout of the Beacon channel bridge
+/// Must have the following:
+/// 1. A singleton instance to ensure that the channel is only created once
+/// 2. Channel method logic to sort the different channel calls
+/// 3. A method that accepts the initial beacon class parameters
+///
+/// Took inspiration from https://github.com/alann-maulana/flutter_beacon/blob/master/lib/flutter_beacon.dart
+///
+/// Note we could handle all of the permissions and check the bluetooth settings in the native Kotlin code
+/// as the library above does. However just to simplify things we will only turn the beacon on
+/// and off in this implementation and handle the permissions and bluetooth settings in the top level dart code
+///
+/// Therefore we need 3 methods:
+/// 1. startBroadcastBeacon
+/// 2. stopBroadcastBeacon
+/// 3. isBroadcasting
+///
+final BeaconChannelBridge beaconChannelBridge =
+    new BeaconChannelBridge._internal();
 
-  @override
-  _SampleAndroidAPIState createState() => _SampleAndroidAPIState();
-}
+class BeaconChannelBridge {
+  BeaconChannelBridge._internal();
 
-class _SampleAndroidAPIState extends State<SampleAndroidAPI> {
-  static const platform = MethodChannel('samples.flutter.dev/battery');
-
-  String _batteryLevel = 'Unknown battery level.';
-
-  Future<void> _getBatteryLevel() async {
-    String batteryLevel;
-    try {
-      final int result = await platform.invokeMethod('getBatteryLevel');
-      batteryLevel = 'Battery level at $result % .';
-    } on PlatformException catch (e) {
-      batteryLevel = "Failed to get battery level: '${e.message}'.";
-    }
-
-    setState(() {
-      _batteryLevel = batteryLevel;
-    });
+  // channels to communicate to and from native code
+  static const MethodChannel _methodChannel =
+      MethodChannel('com.stantonius/beacon');
+  static const EventChannel _eventChannel =
+      EventChannel('com.stantonius/device_bluetooth');
+  //
+  Future<bool> startBroadcastBeacon(Map beaconBroadcastSettings) async {
+    final bool startBroadcasting = await _methodChannel.invokeMethod(
+        'startBroadcastBeacon', beaconBroadcastSettings);
+    return startBroadcasting;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              child: Text('Is Transmission Supported?'),
-              onPressed: _getBatteryLevel,
-            ),
-            Text(_batteryLevel),
-          ],
-        ),
-      ),
-    );
+  Future<bool> stopBroadcastBeacon() async {
+    final bool stopBroadcasting =
+        await _methodChannel.invokeMethod('stopBroadcastBeacon');
+    return stopBroadcasting;
+  }
+
+  Future<bool> isBroadcasting() async {
+    final bool isBroadcasting =
+        await _methodChannel.invokeMethod('isBroadcasting');
+    print("THIS IS isBroadcasting: ${isBroadcasting}");
+    return isBroadcasting;
   }
 }
