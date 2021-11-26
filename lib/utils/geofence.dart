@@ -4,15 +4,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geofence_service/geofence_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stantonsmarthome/utils/secret_vars.dart';
-import 'package:stantonsmarthome/utils/toggle_background_run.dart';
 
 import '../main.dart';
-import 'ble_beacon.dart';
+import 'ble_beacon_new.dart';
 import 'mqtt_connect.dart';
+import 'secret_vars.dart';
 
-final geofenceService = GeofenceService.instance.setup(
+final _geofenceService = GeofenceService.instance.setup(
     interval: 10000,
     accuracy: 150,
     loiteringDelayMs: 60000,
@@ -38,46 +36,46 @@ final _geofenceList = <Geofence>[
 /// State setup
 // 1. Geofence and activity streams
 // These simply house the data provided in the "onChange" functions below
-StreamController<GeofenceStatus> geofenceStreamController =
+StreamController<GeofenceStatus> _geofenceStreamController =
     StreamController<GeofenceStatus>();
-StreamController<Map<String, dynamic>> activityStreamController =
+StreamController<Map<String, dynamic>> _activityStreamController =
     StreamController<Map<String, dynamic>>();
-StreamController<Location> locationStreamController =
+StreamController<Location> _locationStreamController =
     StreamController<Location>();
 
 // 2. Create the provider that listens to these streams
 
 final geofenceStreamProvider = AutoDisposeStreamProvider<GeofenceStatus>((ref) {
   ref.onDispose(() {
-    print("GEOFENCE STREAM CLOSED ON DISPOSE");
-    geofenceStreamController.sink.close();
+    _geofenceStreamController.close();
   });
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
   // the stream controller
-  return geofenceStreamController.stream;
+  return _geofenceStreamController.stream;
 });
 
 final activityStreamProvider = AutoDisposeStreamProvider((ref) {
   ref.onDispose(() {
-    print("ACTIVITY STREAM CLOSED ON DISPOSE");
-    activityStreamController.sink.close();
+    _activityStreamController.close();
   });
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
   // the stream controller
-  return activityStreamController.stream;
+  return _activityStreamController.stream;
 });
 
 final locationStreamProvider = AutoDisposeStreamProvider((ref) {
-  ref.onDispose(() => locationStreamController.sink.close());
+  ref.onDispose(() {
+    _locationStreamController.close();
+  });
   // here goes a vlue that changes over time
   // this stream provider then exposes this to be read. But what is important
   // is to get a value that changes in here. In this case we get the stream from
   // the stream controller
-  return locationStreamController.stream;
+  return _locationStreamController.stream;
 });
 
 /// 3. Callback functions used when statuses change
@@ -92,7 +90,7 @@ Future<void> _onGeofenceStatusChanged(
   print('geofence: $geofence');
   print('geofenceRadius: $geofenceRadius');
   print('geofenceStatus: ${geofenceStatus.toString()}');
-  geofenceStreamController.sink.add(geofenceStatus);
+  _geofenceStreamController.sink.add(geofenceStatus);
   if (geofenceStatus == GeofenceStatus.ENTER) {
     container.read(clientStateProvider.notifier).connect();
     container.read(beaconStateProvider.notifier).bleOnSwitch();
@@ -106,14 +104,14 @@ Future<void> _onGeofenceStatusChanged(
 void _onActivityChanged(Activity prevActivity, Activity currActivity) {
   print('prevActivity: ${prevActivity.toJson()}');
   print('currActivity: ${currActivity.toJson()}');
-  activityStreamController.sink.add(currActivity.toJson());
+  _activityStreamController.sink.add(currActivity.toJson());
   // container.read(beaconStateProvider.notifier).broadcastOnOff();
 }
 
 // This function is to be called when the location has changed.
 void _onLocationChanged(Location location) {
   print('location: ${location.toJson()}');
-  locationStreamController.sink.add(location);
+  _locationStreamController.sink.add(location);
 }
 
 // This function is to be called when a location services status change occurs
@@ -150,46 +148,47 @@ void geofenceCallbacks() {
 }
    */
   WidgetsBinding.instance?.addPostFrameCallback((_) {
-    if (!geofenceService.isRunningService) {
-      geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-      geofenceService.addLocationChangeListener(_onLocationChanged);
-      geofenceService.addLocationServicesStatusChangeListener(
-          _onLocationServicesStatusChanged);
-      geofenceService.addActivityChangeListener(_onActivityChanged);
-      geofenceService.addStreamErrorListener(_onError);
-      geofenceService.start(_geofenceList).catchError(_onError).whenComplete(
-          () => geofenceStreamController.sink.add(GeofenceStatus.EXIT));
-    }
+    _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+    _geofenceService.addLocationChangeListener(_onLocationChanged);
+    _geofenceService.addLocationServicesStatusChangeListener(
+        _onLocationServicesStatusChanged);
+    _geofenceService.addActivityChangeListener(_onActivityChanged);
+    _geofenceService.addStreamErrorListener(_onError);
+    _geofenceService.start(_geofenceList).catchError(_onError).whenComplete(
+        () => _geofenceStreamController.sink.add(GeofenceStatus.EXIT));
   });
 }
 
 WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
   return WillStartForegroundTask(
       onWillStart: () async {
-        bool runBackground = false;
-        if (container.read(lifecycleProvider) != AppLifecycleState.detached) {
-          print("Service is being stopped whoaaa");
-          runBackground = true;
-          // geofenceService.clearAllListeners();
-        } else {
-          geofenceService.stop();
-        }
         // You can add a foreground task start condition.
+        // assume false
+        var doBackgroundTask = false;
 
-        // return await container.read(toggleBackgroundRun);
-        return runBackground;
+        if (container.read(lifecycleProvider) != AppLifecycleState.detached) {
+          // assume true
+          doBackgroundTask = true;
+        } else {
+          await _geofenceStreamController.close();
+          await _locationStreamController.sink.close();
+          await _locationStreamController.close();
+          _geofenceService.clearAllListeners();
+          await _geofenceService.stop();
+        }
+        return doBackgroundTask;
       },
-      foregroundTaskOptions: ForegroundTaskOptions(autoRunOnBoot: true),
-      androidNotificationOptions: AndroidNotificationOptions(
+      foregroundTaskOptions: const ForegroundTaskOptions(autoRunOnBoot: true),
+      androidNotificationOptions: const AndroidNotificationOptions(
         channelId: 'geofence_service_notification_channel',
         channelName: 'Geofence Service Notification',
         channelDescription:
             'This notification appears when the geofence service is running in the background.',
-        channelImportance: NotificationChannelImportance.DEFAULT,
+        channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.LOW,
         isSticky: false,
       ),
-      iosNotificationOptions: IOSNotificationOptions(),
+      iosNotificationOptions: const IOSNotificationOptions(),
       notificationTitle: 'StantonSmartHome is running',
       notificationText: 'Tap to return to the app',
       child: scaffoldWidget);

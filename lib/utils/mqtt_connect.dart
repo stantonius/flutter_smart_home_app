@@ -8,7 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:stantonsmarthome/utils/secret_vars.dart';
+
+import 'secret_vars.dart';
 
 final String brokerIPaddress = secretVars['brokerIPaddress'];
 final int brokerPort = secretVars['brokerPort'];

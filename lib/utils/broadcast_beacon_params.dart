@@ -5,7 +5,6 @@
 /// doesn't need to do anything other than hold the config and pass it to the native
 /// code via a map ot json method
 ///
-
 class BroadcastBeaconParams {
   String uuid;
   String major;

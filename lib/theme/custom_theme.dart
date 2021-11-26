@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stantonsmarthome/theme/custom_colours.dart';
+
+import 'custom_colours.dart';
 
 // taken from https://www.raywenderlich.com/16628777-theming-a-flutter-app-getting-started#toc-anchor-005
 

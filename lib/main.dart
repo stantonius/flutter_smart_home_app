@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stantonsmarthome/utils/channels.dart';
-import 'package:stantonsmarthome/utils/lightswitch.dart';
-import 'package:stantonsmarthome/theme/custom_colours.dart';
-import 'package:stantonsmarthome/theme/custom_theme.dart';
-import 'package:stantonsmarthome/utils/background.dart';
-import 'package:stantonsmarthome/utils/ble_beacon.dart';
-import 'package:stantonsmarthome/utils/geofence.dart';
-import 'package:stantonsmarthome/utils/mqtt_connect.dart';
-import 'package:stantonsmarthome/utils/toggle_background_run.dart';
+
+import 'theme/custom_colours.dart';
+import 'theme/custom_theme.dart';
+import 'utils/background.dart';
+import 'utils/ble_beacon_new.dart';
+import 'utils/geofence.dart';
+import 'utils/lightswitch.dart';
+import 'utils/mqtt_connect.dart';
+import 'utils/wifi_setup.dart';
 
 // Remi recommends against this but I have no other way to acess the state
 // outside of Consumer widget and Providers
 final container = ProviderContainer();
 
+final toggleBackgroundRun = StateProvider<bool>((_) => true);
 var lifecycleProvider =
     StateProvider<AppLifecycleState>((ref) => AppLifecycleState.detached);
 
@@ -51,32 +51,28 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     with WidgetsBindingObserver {
   @override
   void initState() {
-    print("Init state called");
+    super.initState();
+    devicePermissions();
     geofenceCallbacks();
     WidgetsBinding.instance!.addObserver(this);
-    super.initState();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    super.didChangeAppLifecycleState(state);
-
-    /// Log app life cycle state
-    print("The Lifecycle State is ${state}");
-    if (state == AppLifecycleState.detached) {
-      print("Detatched state called and set");
-      ref.read(toggleBackgroundRun.notifier).state = false;
-    }
-    ref.read(lifecycleProvider.notifier).state = state;
   }
 
   @override
   void dispose() {
-    container.read(beaconStateProvider.notifier).bleKillSwitch();
     WidgetsBinding.instance!.removeObserver(this);
-    print("Flutter dispose called");
-    // geofenceService.stop();
+    container.read(beaconStateProvider.notifier).bleKillSwitch();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    print("App Lifecycle State: ${state}");
+    if (state == AppLifecycleState.detached) {
+      ref.read(toggleBackgroundRun.notifier).state = false;
+      container.read(beaconStateProvider.notifier).bleKillSwitch();
+    }
+    ref.read(lifecycleProvider.notifier).state = state;
   }
 
   @override
@@ -91,12 +87,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
             backgroundColor: CustomColours.background,
             child: ListView(children: <Widget>[
               DrawerHeader(child: Text("Settings")),
-              ListTile(
-                title: Text('Enable Required Permissions'),
-                onTap: () {
-                  devicePermissions();
-                },
-              )
+              // ListTile(
+              //   title: Text('Enable Required Permissions'),
+              //   onTap: () {
+              //     devicePermissions();
+              //   },
+              // )
             ])),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -105,12 +101,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [Expanded(child: WifiStatus())],
                   ),
-                  // Row(
-                  //   children: [Expanded(child: WifiStatus())],
-                  // ),
-
                   // Row(
                   //   children: [Expanded(child: DeviceBTStatus())],
                   // ),
@@ -140,9 +132,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
             Row(
               children: [
                 // Expanded(child: SampleAndroidAPI()),
-                Expanded(
-                  child: ToggleBackgroundRun(),
-                )
               ],
             ),
           ],

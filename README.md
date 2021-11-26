@@ -1,27 +1,16 @@
-# Flutter Smart Home App
+# stantonsmarthome2
 
-## Objective
+A new Flutter project.
 
-1. Advertise as beacon for in-home position tracking.
-2. Interface to store other smart home/IoT settings (switches, video feeds eventually)
+## Getting Started
 
-## Status
+This project is a starting point for a Flutter application.
 
-Very much in progress. It does work though as an iBeacon.
+A few resources to get you started if this is your first Flutter project:
 
-## Features
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-* Advertises in the background as iBeacon
-* Connects to home Raspberry Pi server (specifically to Mosquitto MQTT protocol).
-* Acts as an activity tracker and has geofencing set up
-* Currently only for Android (although every library purposely chosen with iPhone compatability in mind).
-
-## ToDo
-- [ ] Turn off beacon when leaving geofence
-- [ ] Enable light switch to turn on/off lights via Node-Red/MQTT
-- [ ] Properly disable all features if not at home
-- [ ] Enable remote access
-
-## Useful Resources
-
-* Using a secrets.dart file that is hidden from version control but still works with Github Actions: https://stackoverflow.com/a/67998780/9739375
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

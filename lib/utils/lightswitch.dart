@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:stantonsmarthome/utils/mqtt_connect.dart';
+
+import 'mqtt_connect.dart';
 
 // current topic
 const String pubTopic = "Lights/manualSwitch";
