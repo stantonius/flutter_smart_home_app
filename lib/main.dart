@@ -59,18 +59,26 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
 
   @override
   void dispose() {
+    print("MAin App start disposing disposed");
     WidgetsBinding.instance!.removeObserver(this);
-    container.read(beaconStateProvider.notifier).bleKillSwitch();
+    // container.read(beaconStateProvider.notifier).bleKillSwitch();
     super.dispose();
+    print("MAin App disposed");
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     super.didChangeAppLifecycleState(state);
     print("App Lifecycle State: ${state}");
     if (state == AppLifecycleState.detached) {
       ref.read(toggleBackgroundRun.notifier).state = false;
-      container.read(beaconStateProvider.notifier).bleKillSwitch();
+      // container.read(beaconStateProvider.notifier).bleKillSwitch();
+      // await beaconBroadcast.stop();
+      // geofenceService.clearAllListeners();
+      await geofenceService.stop();
+      // super.deactivate();
+      WidgetsBinding.instance!.removeObserver(this);
+      super.dispose();
     }
     ref.read(lifecycleProvider.notifier).state = state;
   }
@@ -115,9 +123,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   Row(
                     children: [Expanded(child: MqttCard())],
                   ),
-                  Row(
-                    children: [Expanded(child: BLECard())],
-                  )
+                  // Row(
+                  //   children: [Expanded(child: BLECard())],
+                  // )
                 ],
               ),
               padding: EdgeInsets.symmetric(vertical: 75),

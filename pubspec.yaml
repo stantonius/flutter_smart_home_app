@@ -38,6 +38,7 @@ dependencies:
   permission_handler: ^8.3.0
   font_awesome_flutter: ^9.2.0
   geofence_service: ^3.4.4
+  
   mqtt_client: ^9.6.2
   network_info_plus: ^2.1.1
   freezed_annotation: ^1.0.0
@@ -46,6 +47,7 @@ dependencies:
     path: ./beacon_broadcast
 
 dependency_overrides:
+  flutter_foreground_task: ^3.4.1
   fl_location: 
     path: ./flutter_location/fl_location
 

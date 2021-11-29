@@ -9,13 +9,17 @@ void devicePermissions() async {
     await Permission.location.request();
   }
 
+  if (locationStatus.isDenied == true) {
+    await Permission.location.request();
+  }
+
   if (activityStatus.isGranted == false) {
     await Permission.activityRecognition.request();
   }
 
-  if (locationStatus.isGranted == true) {
-    await Permission.locationAlways.request();
-  }
+  // if (locationStatus.isGranted == true) {
+  //   await Permission.locationAlways.request();
+  // }
 
   if (bluetoothAdvertiseStatus.isGranted == false) {
     await Permission.bluetoothAdvertise.request();

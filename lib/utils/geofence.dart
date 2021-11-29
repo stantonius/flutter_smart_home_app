@@ -10,7 +10,7 @@ import 'ble_beacon_new.dart';
 import 'mqtt_connect.dart';
 import 'secret_vars.dart';
 
-final _geofenceService = GeofenceService.instance.setup(
+final geofenceService = GeofenceService.instance.setup(
     interval: 10000,
     accuracy: 150,
     loiteringDelayMs: 60000,
@@ -93,10 +93,10 @@ Future<void> _onGeofenceStatusChanged(
   _geofenceStreamController.sink.add(geofenceStatus);
   if (geofenceStatus == GeofenceStatus.ENTER) {
     container.read(clientStateProvider.notifier).connect();
-    container.read(beaconStateProvider.notifier).bleOnSwitch();
+    // container.read(beaconStateProvider.notifier).bleOnSwitch();
   } else if (geofenceStatus == GeofenceStatus.EXIT) {
     container.read(clientStateProvider.notifier).disconnect();
-    container.read(beaconStateProvider.notifier).bleKillSwitch();
+    // container.read(beaconStateProvider.notifier).bleKillSwitch();
   }
 }
 
@@ -148,13 +148,13 @@ void geofenceCallbacks() {
 }
    */
   WidgetsBinding.instance?.addPostFrameCallback((_) {
-    _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-    _geofenceService.addLocationChangeListener(_onLocationChanged);
-    _geofenceService.addLocationServicesStatusChangeListener(
+    geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
+    geofenceService.addLocationChangeListener(_onLocationChanged);
+    geofenceService.addLocationServicesStatusChangeListener(
         _onLocationServicesStatusChanged);
-    _geofenceService.addActivityChangeListener(_onActivityChanged);
-    _geofenceService.addStreamErrorListener(_onError);
-    _geofenceService.start(_geofenceList).catchError(_onError).whenComplete(
+    geofenceService.addActivityChangeListener(_onActivityChanged);
+    geofenceService.addStreamErrorListener(_onError);
+    geofenceService.start(_geofenceList).catchError(_onError).whenComplete(
         () => _geofenceStreamController.sink.add(GeofenceStatus.EXIT));
   });
 }
@@ -173,8 +173,8 @@ WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
           await _geofenceStreamController.close();
           await _locationStreamController.sink.close();
           await _locationStreamController.close();
-          _geofenceService.clearAllListeners();
-          await _geofenceService.stop();
+          geofenceService.clearAllListeners();
+          await geofenceService.stop();
         }
         return doBackgroundTask;
       },
