@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -61,7 +63,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   void dispose() {
     print("MAin App start disposing disposed");
     WidgetsBinding.instance!.removeObserver(this);
-    // container.read(beaconStateProvider.notifier).bleKillSwitch();
+    container.read(beaconStateProvider.notifier).bleKillSwitch();
     super.dispose();
     print("MAin App disposed");
   }
@@ -72,9 +74,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     print("App Lifecycle State: ${state}");
     if (state == AppLifecycleState.detached) {
       ref.read(toggleBackgroundRun.notifier).state = false;
-      // container.read(beaconStateProvider.notifier).bleKillSwitch();
-      // await beaconBroadcast.stop();
+      container.read(beaconStateProvider.notifier).bleKillSwitch();
+      await beaconBroadcast.stop();
       // geofenceService.clearAllListeners();
+      sleep(Duration(seconds: 2));
       await geofenceService.stop();
       // super.deactivate();
       WidgetsBinding.instance!.removeObserver(this);
@@ -123,9 +126,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   Row(
                     children: [Expanded(child: MqttCard())],
                   ),
-                  // Row(
-                  //   children: [Expanded(child: BLECard())],
-                  // )
+                  Row(
+                    children: [Expanded(child: BLECard())],
+                  )
                 ],
               ),
               padding: EdgeInsets.symmetric(vertical: 75),

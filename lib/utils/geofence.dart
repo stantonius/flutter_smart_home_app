@@ -93,10 +93,10 @@ Future<void> _onGeofenceStatusChanged(
   _geofenceStreamController.sink.add(geofenceStatus);
   if (geofenceStatus == GeofenceStatus.ENTER) {
     container.read(clientStateProvider.notifier).connect();
-    // container.read(beaconStateProvider.notifier).bleOnSwitch();
+    container.read(beaconStateProvider.notifier).bleOnSwitch();
   } else if (geofenceStatus == GeofenceStatus.EXIT) {
     container.read(clientStateProvider.notifier).disconnect();
-    // container.read(beaconStateProvider.notifier).bleKillSwitch();
+    container.read(beaconStateProvider.notifier).bleKillSwitch();
   }
 }
 
@@ -105,7 +105,7 @@ void _onActivityChanged(Activity prevActivity, Activity currActivity) {
   print('prevActivity: ${prevActivity.toJson()}');
   print('currActivity: ${currActivity.toJson()}');
   _activityStreamController.sink.add(currActivity.toJson());
-  // container.read(beaconStateProvider.notifier).broadcastOnOff();
+  container.read(beaconStateProvider.notifier).broadcastOnOff();
 }
 
 // This function is to be called when the location has changed.
@@ -225,7 +225,7 @@ class ActivityDetails extends ConsumerWidget {
         child: Center(
       child: activityState.map(data: (data) {
         final activityData = data.value["type"];
-        // ref.read(beaconStateProvider.notifier).broadcastOnOff();
+        ref.read(beaconStateProvider.notifier).broadcastOnOff();
         return Text(activityData.toString());
       }, loading: (_) {
         return Text("Loading");

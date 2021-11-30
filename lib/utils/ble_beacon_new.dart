@@ -63,11 +63,10 @@ class BLESetup extends StateNotifier<bool?> {
     if (_isAdvertising) {
       print("Turning beacon off: ${beacon.isAdvertising()}");
       await beacon.stop();
-      state = await beacon.isAdvertising();
+      state = false;
     } else {
       await beacon.start();
-      print("Turning beacon on: ${beacon.isAdvertising()}");
-      state = await beacon.isAdvertising();
+      state = await true;
     }
   }
 
@@ -75,7 +74,7 @@ class BLESetup extends StateNotifier<bool?> {
     final currState = await state;
     if (currState != true) {
       await beacon.start();
-      state = await beacon.isAdvertising();
+      state = true;
     } else {
       print("Already broadcasting");
     }
@@ -84,7 +83,7 @@ class BLESetup extends StateNotifier<bool?> {
   // Needed when wifi is not home network, shut off advertising
   void bleKillSwitch() async {
     await beacon.stop();
-    state = await beacon.isAdvertising();
+    state = await false;
     print("Turning beacon off");
   }
 }
