@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_beacon/flutter_beacon.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stantonsmarthome/utils/channels.dart';
 
@@ -17,9 +16,9 @@ class BTDeviceState extends StateNotifier<Future<bool>> {
   BTDeviceState({required this.beacon, required this.ref})
       : super(beacon.isBroadcasting());
 
-  Stream<BluetoothState> btDeviceStateChanged() {
+  Stream<bool> btDeviceStateChanged() {
     // ref.read(beaconStateProvider.notifier).bleKillSwitch();
-    return beacon.bluetoothStateChanged();
+    return beacon.isBroadcasting().asStream();
   }
 }
 

@@ -18,10 +18,10 @@ BroadcastBeaconParams beaconParams = BroadcastBeaconParams(
   minor: '34343',
 );
 
-class BLESetup extends StateNotifier<Future<bool>> {
+class BLESetup extends StateNotifier<bool> {
   final BeaconChannelBridge beacon;
 
-  BLESetup({required this.beacon}) : super(beacon.isBroadcasting());
+  BLESetup({required this.beacon}) : super(false);
 
   @override
   void dispose() {
@@ -30,14 +30,14 @@ class BLESetup extends StateNotifier<Future<bool>> {
   }
 
   void broadcastOnOff() async {
-    if (await beacon.isBroadcasting()) {
+    if (state) {
       print("Turning beacon off");
       await beacon.stopBroadcastBeacon();
-      state = beacon.isBroadcasting();
+      state = false;
     } else {
       await beacon.startBroadcastBeacon(beaconParams.toMap());
       print("Turning beacon on");
-      state = beacon.isBroadcasting();
+      state = true;
     }
   }
 
@@ -45,7 +45,7 @@ class BLESetup extends StateNotifier<Future<bool>> {
     final currState = await state;
     if (currState != true) {
       await beacon.startBroadcastBeacon(beaconParams.toMap());
-      state = beacon.isBroadcasting();
+      state = true;
     } else {
       print("Already broadcasting");
     }
@@ -54,7 +54,7 @@ class BLESetup extends StateNotifier<Future<bool>> {
   // Needed when wifi is not home network, shut off advertising
   void bleKillSwitch() async {
     await beacon.stopBroadcastBeacon();
-    state = beacon.isBroadcasting();
+    state = false;
     print("Turning beacon off");
   }
 }
@@ -105,7 +105,6 @@ class BLECard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentBLEState = ref.watch(bleFutureStateProvider);
-    // final testy = ref.watch(getDeviceBTState);
 
     return Container(
       child: InkWell(

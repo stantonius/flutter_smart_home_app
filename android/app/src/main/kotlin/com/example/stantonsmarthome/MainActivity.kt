@@ -9,10 +9,7 @@ import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.EventChannel
-import org.altbeacon.beacon.Beacon
-import org.altbeacon.beacon.BeaconManager
-import org.altbeacon.beacon.BeaconParser
-import org.altbeacon.beacon.BeaconTransmitter
+
 
 /// Reference library used
 ///
@@ -26,9 +23,14 @@ class MainActivity : FlutterActivity() {
 
     private var methodChannel: MethodChannel? = null
 
+    private lateinit var beacon: Beacon
+
+
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         setChannels(this, flutterEngine.dartExecutor.binaryMessenger)
+        beacon = Beacon()
+        beacon.init(this)
     }
 
     private fun setChannels(context: Context, messenger: BinaryMessenger) {
@@ -38,7 +40,6 @@ class MainActivity : FlutterActivity() {
                 val deviceTransmissionSupport = checkDeviceTransmissionSupport(context)
                 result.success(deviceTransmissionSupport.toInt())
             } else if (call.method == "startBroadcastBeacon") {
-                // Log.d("ARGHHH", "PRINTING FROM NATIVE")
                 val _startBroadcasting = startBroadcastBeacon(call)
                 result.success(_startBroadcasting)
             } else if (call.method == "stopBroadcastBeacon") {
@@ -54,45 +55,23 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun checkDeviceTransmissionSupport(context: Context): Boolean {
-        val beaconManager = BeaconManager.getInstanceForApplication(context)
-        return beaconManager.
+        return true
     }
 
-    private fun startBroadcastBeacon(call: MethodCall): Boolean {
-        if (call.arguments !is Map<*, *>) {
-            throw IllegalArgumentException("Arguments are not a map! " + call.arguments)
-        }
-        val arguments = call.arguments as Map<String, Any>
-        val beacon =
-                Beacon.Builder()
-                        .setId1(arguments["uuid"] as String)
-                        .setId2(arguments["major"] as String)
-                        .setId3(arguments["minor"] as String)
-                        .setManufacturer(arguments["manufacturer"] as Int)
-                        .setTxPower(arguments["txPower"] as Int)
-                        .build()
 
-        val beaconParser =
-                BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")
-        var beaconTransmitter = BeaconTransmitter(getApplicationContext(), beaconParser)
-        beaconTransmitter.startAdvertising(beacon)
+    private fun startBroadcastBeacon(call: MethodCall): Boolean {
+        val arguments = call.arguments as Map<*, *>
+        beacon.start(arguments)
         return true
     }
 
     private fun stopBroadcastBeacon(context: Context): Boolean {
-        val beaconParser =
-                BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")
-        val beaconTransmitter = BeaconTransmitter(context, beaconParser)
-        beaconTransmitter.stopAdvertising()
+        beacon.stop()
         return true
     }
 
     private fun isBroadcasting(context: Context): Boolean {
-        val beaconParser =
-                BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")
-        val beaconTransmitter = BeaconTransmitter(context, beaconParser)
-
-        return beaconTransmitter.isStarted()
+        return beacon.isAdvertising()
     }
 
     override fun onDestroy() {
