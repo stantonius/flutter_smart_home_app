@@ -48,22 +48,22 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   @override
   void initState() {
     geofenceCallbacks();
-    WidgetsBinding.instance!.addObserver(this);
+    // WidgetsBinding.instance!.addObserver(this);
     super.initState();
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    container.read(beaconStateProvider.notifier).bleKillSwitch();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance!.removeObserver(this);
+  //   container.read(beaconStateProvider.notifier).bleKillSwitch();
+  //   super.dispose();
+  // }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    print("App Lifecycle State: ${state}");
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   super.didChangeAppLifecycleState(state);
+  //   print("App Lifecycle State: ${state}");
+  // }
 
   @override
   Widget build(BuildContext context) {

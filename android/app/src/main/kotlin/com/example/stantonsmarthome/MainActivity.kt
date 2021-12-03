@@ -8,7 +8,6 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.EventChannel
 
 
 /// Reference library used
@@ -19,7 +18,7 @@ fun Boolean.toInt() = if (this) 1 else 0
 
 class MainActivity : FlutterActivity() {
     private val METHOD_CHANNEL_NAME = "com.stantonius/beacon"
-    private val EVENT_CHANNEL_NAME = "com.stantonius/device_bluetooth"
+//    private val EVENT_CHANNEL_NAME = "com.stantonius/device_bluetooth"
 
     private var methodChannel: MethodChannel? = null
 
@@ -54,6 +53,11 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        Log.d("FlutterActivity", "onStop cancelled")
+    }
+
     private fun checkDeviceTransmissionSupport(context: Context): Boolean {
         return true
     }
@@ -66,6 +70,7 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun stopBroadcastBeacon(context: Context): Boolean {
+
         beacon.stop()
         return true
     }
