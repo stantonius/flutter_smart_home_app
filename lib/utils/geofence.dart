@@ -93,10 +93,10 @@ Future<void> _onGeofenceStatusChanged(
   _geofenceStreamController.sink.add(geofenceStatus);
   if (geofenceStatus == GeofenceStatus.ENTER) {
     container.read(clientStateProvider.notifier).connect();
-    container.read(beaconStateProvider.notifier).bleOnSwitch();
+    // container.read(beaconStateProvider.notifier).bleOnSwitch();
   } else if (geofenceStatus == GeofenceStatus.EXIT) {
     container.read(clientStateProvider.notifier).disconnect();
-    container.read(beaconStateProvider.notifier).bleKillSwitch();
+    // container.read(beaconStateProvider.notifier).bleKillSwitch();
   }
 }
 

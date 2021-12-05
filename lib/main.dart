@@ -20,6 +20,7 @@ void testFunction() async {
 
 void main() {
   runApp(UncontrolledProviderScope(container: container, child: MyApp()));
+  geofenceCallbacks();
 }
 
 class MyApp extends StatelessWidget {
@@ -34,23 +35,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends ConsumerStatefulWidget {
+class MyHomePage extends ConsumerWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends ConsumerState<MyHomePage>
-    with WidgetsBindingObserver {
-  @override
-  void initState() {
-    geofenceCallbacks();
-    // WidgetsBinding.instance!.addObserver(this);
-    super.initState();
-  }
 
   // @override
   // void dispose() {
@@ -66,12 +54,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   // }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // devicePermissions();
     return geofenceWidgetWrapper(
       Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text(title),
         ),
         drawer: Drawer(
             backgroundColor: CustomColours.background,
@@ -93,9 +81,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   Row(
                     children: [Expanded(child: WifiStatus())],
                   ),
-                  Row(
-                    children: [Expanded(child: DeviceBTStatus())],
-                  ),
+                  // Row(
+                  //   children: [Expanded(child: DeviceBTStatus())],
+                  // ),
                   Row(
                     children: [Expanded(child: GeofenceDetails())],
                   ),
@@ -105,9 +93,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   Row(
                     children: [Expanded(child: MqttCard())],
                   ),
-                  Row(
-                    children: [Expanded(child: BLECard())],
-                  )
+                  // Row(
+                  //   children: [Expanded(child: BLECard())],
+                  // )
                 ],
               ),
               padding: EdgeInsets.symmetric(vertical: 75),
