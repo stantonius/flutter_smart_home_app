@@ -12,11 +12,11 @@ import 'package:stantonsmarthome/utils/wifi_setup.dart';
 
 // Remi recommends against this but I have no other way to acess the state
 // outside of Consumer widget and Providers
+// globally accessible state container from Riverpod
 final container = ProviderContainer();
 
-void testFunction() async {
-  // callbackDispatcher();
-}
+// permissions class
+final permissions = SmartHomePermissions();
 
 void main() {
   runApp(UncontrolledProviderScope(container: container, child: MyApp()));
@@ -49,6 +49,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
   void initState() {
     geofenceCallbacks();
     // WidgetsBinding.instance!.addObserver(this);
+    permissions.requestPermission();
     super.initState();
   }
 
@@ -80,7 +81,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
               ListTile(
                 title: Text('Enable Required Permissions'),
                 onTap: () {
-                  devicePermissions();
+                  // devicePermissions();
                 },
               )
             ])),
