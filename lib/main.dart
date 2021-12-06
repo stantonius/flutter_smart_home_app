@@ -81,7 +81,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
               ListTile(
                 title: Text('Enable Required Permissions'),
                 onTap: () {
-                  // permissions.getPermissions();
+                  permissions.requestPermission();
                 },
               )
             ])),
