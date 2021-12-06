@@ -19,7 +19,11 @@ class SmartHomePermissions {
 
   Future<bool> requestPermission() async {
     print("Permission request called");
-    var result = await permissions.request();
+    await permissions.map((e) {
+      return e.request();
+    });
+
+    // var result = await permissions.request();
     // result.forEach((key, value) async {
     //   if (value != PermissionStatus.granted) {
     //     await key.request();
