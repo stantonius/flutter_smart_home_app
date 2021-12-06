@@ -47,10 +47,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
     with WidgetsBindingObserver {
   @override
   void initState() {
+    super.initState();
     geofenceCallbacks();
     // WidgetsBinding.instance!.addObserver(this);
     permissions.requestPermission();
-    super.initState();
   }
 
   // @override

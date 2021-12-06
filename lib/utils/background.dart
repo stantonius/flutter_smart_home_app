@@ -10,6 +10,11 @@ class SmartHomePermissions {
 
   Future<bool> requestPermission() async {
     var result = await permissions.request();
+    result.forEach((key, value) async {
+      if (value != PermissionStatus.granted) {
+        await key.request();
+      }
+    });
     return true;
   }
 }

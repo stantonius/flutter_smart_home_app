@@ -17,9 +17,10 @@ Very much in progress. It does work though as an iBeacon.
 * Currently only for Android (although every library purposely chosen with iPhone compatability in mind).
 
 ## ToDo
-- [ ] Turn off beacon when leaving geofence
-- [ ] Enable light switch to turn on/off lights via Node-Red/MQTT
-- [ ] Properly disable all features if not at home
+- [x] Turn off beacon when leaving geofence
+- [x] Enable light switch to turn on/off lights via Node-Red/MQTT
+- [x] Properly disable all features if not at home
+- [ ] Handle when device bluetooth turns on/off
 - [ ] Enable remote access
 
 ## Useful Resources

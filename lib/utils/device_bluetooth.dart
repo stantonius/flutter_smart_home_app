@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stantonsmarthome/utils/channels.dart';
 
+import 'ble_beacon.dart';
+
 /// Initially I tried to a) get the device Bluetooth state and b) start/stop broadcasting
 /// but it became to complicated. So now breaking it up into 2 separate providers.
 /// This provider simply gets/sets the device Bluetooth state
@@ -17,7 +19,7 @@ class BTDeviceState extends StateNotifier<Future<bool>> {
       : super(beacon.isBroadcasting());
 
   Stream<bool> btDeviceStateChanged() {
-    // ref.read(beaconStateProvider.notifier).bleKillSwitch();
+    ref.read(beaconStateProvider.notifier).bleKillSwitch();
     return beacon.isBroadcasting().asStream();
   }
 }

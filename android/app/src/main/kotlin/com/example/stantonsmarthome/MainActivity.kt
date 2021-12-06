@@ -59,7 +59,7 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun checkDeviceTransmissionSupport(context: Context): Boolean {
-        return true
+        return beacon.isBLEenabled()
     }
 
 

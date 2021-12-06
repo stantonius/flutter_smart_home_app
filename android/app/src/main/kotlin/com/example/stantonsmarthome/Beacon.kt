@@ -14,11 +14,18 @@ class Beacon {
 
     private var beaconTransmitter: BeaconTransmitter? = null
     private var beaconParser: BeaconParser = BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")
+    private var beaconManager: BeaconManager? = null
     
     fun init(context: Context) {
         this.context = context
         Log.d("THIS IS CONTEXT", context.toString())
         beaconTransmitter = BeaconTransmitter(context, beaconParser)
+        beaconManager = BeaconManager.getInstanceForApplication(context)
+    }
+
+    fun isBLEenabled(): Boolean {
+        Log.d("BT State updated", "BT state updated")
+        return beaconManager!!.checkAvailability()
     }
 
     fun start(beaconParams: Map<*, *>) {

@@ -43,10 +43,15 @@ class BeaconChannelBridge {
     return stopBroadcasting;
   }
 
+  Future<bool> checkBluetoothStatus() async {
+    final bool bluetoothStatus =
+        await _methodChannel.invokeMethod('checkBluetoothStatus');
+    return bluetoothStatus;
+  }
+
   Future<bool> isBroadcasting() async {
     final bool isBroadcasting =
         await _methodChannel.invokeMethod('isBroadcasting');
-    print("THIS IS isBroadcasting: ${isBroadcasting}");
     return isBroadcasting;
   }
 }
