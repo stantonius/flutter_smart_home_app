@@ -38,6 +38,12 @@ dependencies:
   # firebase_analytics: ^5.0.2
   geofence_service: ^3.4.0
 
+dependency_overrides:
+  flutter_foreground_task:
+    git:
+      url: https://github.com/Dev-hwang/flutter_foreground_task.git
+      ref: master
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
