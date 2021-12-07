@@ -8,27 +8,11 @@ class SmartHomePermissions {
     Permission.bluetoothAdvertise
   ];
 
-  // Future<Map> getPermissions() async {
-  //   Map perms = {};
-  //   await permissions.forEach((element) {
-  //     perms[element.value] = element.status;
-  //   });
-  //   print(perms);
-  //   return perms;
-  // }
-
   Future<bool> requestPermission() async {
     print("Permission request called");
     await permissions.map((e) {
       return e.request();
     });
-
-    // var result = await permissions.request();
-    // result.forEach((key, value) async {
-    //   if (value != PermissionStatus.granted) {
-    //     await key.request();
-    //   }
-    // });
     return true;
   }
 }

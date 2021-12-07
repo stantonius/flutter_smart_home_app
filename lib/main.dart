@@ -94,9 +94,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   Row(
                     children: [Expanded(child: WifiStatus())],
                   ),
-                  Row(
-                    children: [Expanded(child: DeviceBTStatus())],
-                  ),
+                  // Row(
+                  //   children: [Expanded(child: DeviceBTStatus())],
+                  // ),
                   Row(
                     children: [Expanded(child: GeofenceDetails())],
                   ),
