@@ -36,12 +36,13 @@ class Beacon {
 
         val beacon =
                 Beacon.Builder()
-                        .setId1(beaconParams["uuid"] as String)
-                        .setId2(beaconParams["major"] as String)
-                        .setId3(beaconParams["minor"] as String)
-                        .setManufacturer(beaconParams["manufacturer"] as Int)
-                        .setTxPower(beaconParams["txPower"] as Int)
-                        .build()
+                    .setId1(beaconParams["uuid"] as String)
+                    .setId2(beaconParams["major"] as String)
+                    .setId3(beaconParams["minor"] as String)
+                    .setManufacturer(beaconParams["manufacturer"] as Int)
+                    .setTxPower(beaconParams["txPower"] as Int)
+                    
+                    .build()
         beaconTransmitter?.startAdvertising(beacon)
     }
 

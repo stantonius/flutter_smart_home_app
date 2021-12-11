@@ -168,11 +168,10 @@ WillStartForegroundTask geofenceWidgetWrapper(Widget scaffoldWidget) {
       foregroundTaskOptions: ForegroundTaskOptions(autoRunOnBoot: true),
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'geofence_service_notification_channel',
-        channelName: 'Geofence Service Notification',
-        channelDescription:
-            'This notification appears when the geofence service is running in the background.',
+        channelName: 'Stanton Smart Home',
+        channelDescription: 'Stanton Smart Home is running in thr background',
         channelImportance: NotificationChannelImportance.DEFAULT,
-        priority: NotificationPriority.LOW,
+        priority: NotificationPriority.DEFAULT,
         isSticky: false,
       ),
       iosNotificationOptions: IOSNotificationOptions(),
