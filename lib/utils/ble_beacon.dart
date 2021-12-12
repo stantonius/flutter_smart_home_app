@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stantonsmarthome/utils/channels.dart';
-import 'broadcast_beacon_params.dart';
+import 'package:beacon_broadcast/beacon_broadcast.dart';
 
 /// This page contains all of the setup for the BLE Beacon
 /// FOr the most part this section is self-contained, with the exception for
@@ -12,40 +12,57 @@ import 'broadcast_beacon_params.dart';
 
 // Initialize the settings for the advertising beacon
 
-BroadcastBeaconParams beaconParams = BroadcastBeaconParams(
-  uuid: "c8c706b9-879a-4682-ba7f-56346f4d800e",
-  major: '12121',
-  minor: '34343',
-);
+BeaconBroadcast beaconBroadcast = BeaconBroadcast();
 
-class BLESetup extends StateNotifier<bool> {
-  final BeaconChannelBridge beacon;
+Map beaconParams = {
+  "uuid": "c8c706b9-879a-4682-ba7f-56346f4d800e",
+  "major": 12121,
+  "minor": 34343,
+  "layout": "s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21",
+  "advertiseMode": AdvertiseMode.lowPower,
+  "manufacturerId": 0x001D,
+};
 
-  BLESetup({required this.beacon}) : super(false);
+class BLESetup extends StateNotifier<Future<bool?>> {
+  final BeaconBroadcast beacon;
+
+  BLESetup({required this.beacon}) : super(beaconBroadcast.isAdvertising());
 
   @override
   void dispose() {
     super.dispose();
-    beacon.stopBroadcastBeacon();
+    beacon.stop();
+  }
+
+  Future start() async {
+    await beacon
+        .setUUID(beaconParams['uuid'])
+        // .setMajorId(beaconParams['major'])
+        // .setMinorId(beaconParams['minor'])
+        .setManufacturerId(beaconParams['manufacturerId'])
+        .setLayout(beaconParams['layout'])
+        .setAdvertiseMode(beaconParams['advertiseMode'])
+        .start();
+    return beacon.isAdvertising();
   }
 
   void broadcastOnOff() async {
-    if (state) {
+    if (state == true) {
       print("Turning beacon off");
-      await beacon.stopBroadcastBeacon();
-      state = false;
+      await beacon.stop();
+      state = beacon.isAdvertising();
     } else {
-      await beacon.startBroadcastBeacon(beaconParams.toMap());
+      await start();
       print("Turning beacon on");
-      state = true;
+      state = beacon.isAdvertising();
     }
   }
 
   void bleOnSwitch() async {
     final currState = await state;
     if (currState != true) {
-      await beacon.startBroadcastBeacon(beaconParams.toMap());
-      state = true;
+      await start();
+      state = beacon.isAdvertising();
     } else {
       print("Already broadcasting");
     }
@@ -53,8 +70,8 @@ class BLESetup extends StateNotifier<bool> {
 
   // Needed when wifi is not home network, shut off advertising
   void bleKillSwitch() async {
-    await beacon.stopBroadcastBeacon();
-    state = false;
+    await beacon.stop();
+    state = beacon.isAdvertising();
     print("Turning beacon off");
   }
 }
@@ -64,7 +81,7 @@ class BLESetup extends StateNotifier<bool> {
 // Store whether broadcasting is on/off. Pulls the isBroadcasting Future
 // from the state defined in BLESetup - which extends StateNotifier
 final beaconStateProvider =
-    StateNotifierProvider((ref) => BLESetup(beacon: beaconChannelBridge));
+    StateNotifierProvider((ref) => BLESetup(beacon: beaconBroadcast));
 
 // Reads the the Future isBroadcasting state. Needed since the state is a Future
 // so we need a secondary function to read and update accordingly

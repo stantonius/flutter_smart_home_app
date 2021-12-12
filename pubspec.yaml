@@ -37,6 +37,7 @@ dependencies:
   # firebase_core: ^0.4.0+9
   # firebase_analytics: ^5.0.2
   geofence_service: ^3.4.0
+  beacon_broadcast: ^0.3.0
 
 dependency_overrides:
   flutter_foreground_task:
