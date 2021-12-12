@@ -23,10 +23,10 @@ Map beaconParams = {
   "manufacturerId": 0x001D,
 };
 
-class BLESetup extends StateNotifier<Future<bool?>> {
+class BLESetup extends StateNotifier<bool> {
   final BeaconBroadcast beacon;
 
-  BLESetup({required this.beacon}) : super(beaconBroadcast.isAdvertising());
+  BLESetup({required this.beacon}) : super(false);
 
   @override
   void dispose() {
@@ -50,11 +50,11 @@ class BLESetup extends StateNotifier<Future<bool?>> {
     if (state == true) {
       print("Turning beacon off");
       await beacon.stop();
-      state = beacon.isAdvertising();
+      state = false;
     } else {
       await start();
       print("Turning beacon on");
-      state = beacon.isAdvertising();
+      state = true;
     }
   }
 
@@ -62,7 +62,7 @@ class BLESetup extends StateNotifier<Future<bool?>> {
     final currState = await state;
     if (currState != true) {
       await start();
-      state = beacon.isAdvertising();
+      state = true;
     } else {
       print("Already broadcasting");
     }
@@ -71,7 +71,7 @@ class BLESetup extends StateNotifier<Future<bool?>> {
   // Needed when wifi is not home network, shut off advertising
   void bleKillSwitch() async {
     await beacon.stop();
-    state = beacon.isAdvertising();
+    state = false;
     print("Turning beacon off");
   }
 }
