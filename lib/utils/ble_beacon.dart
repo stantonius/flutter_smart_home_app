@@ -20,7 +20,8 @@ Map beaconParams = {
   "minor": 34343,
   "layout": "s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21",
   "advertiseMode": AdvertiseMode.lowPower,
-  "manufacturerId": 0x001D,
+  // "manufacturerId": 0x001D,
+  "manufacturerId": 0x0118 // Apple
 };
 
 class BLESetup extends StateNotifier<bool> {
