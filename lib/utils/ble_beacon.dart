@@ -18,10 +18,11 @@ Map beaconParams = {
   "uuid": "c8c706b9-879a-4682-ba7f-56346f4d800e",
   "major": 12121,
   "minor": 34343,
-  "layout": "s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21",
+  // "layout": "s:0-1=feaa,m:2-2=10,p:3-3:-41,i:4-21",
+  "layout": 'm:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24', // iBeacon layout
   "advertiseMode": AdvertiseMode.lowPower,
   // "manufacturerId": 0x001D,
-  "manufacturerId": 0x0118 // Apple
+  "manufacturerId": 0x004c // Apple
 };
 
 class BLESetup extends StateNotifier<bool> {
@@ -38,8 +39,8 @@ class BLESetup extends StateNotifier<bool> {
   Future start() async {
     await beacon
         .setUUID(beaconParams['uuid'])
-        // .setMajorId(beaconParams['major'])
-        // .setMinorId(beaconParams['minor'])
+        .setMajorId(beaconParams['major'])
+        .setMinorId(beaconParams['minor'])
         .setManufacturerId(beaconParams['manufacturerId'])
         .setLayout(beaconParams['layout'])
         .setAdvertiseMode(beaconParams['advertiseMode'])
